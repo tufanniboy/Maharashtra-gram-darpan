@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programmes - Maharashtra Gram Darpan</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js for Graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Leaflet CSS -->
+    <link 
+        rel="stylesheet" 
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" 
+    />
+
+    <style>
+        /* Custom styles based on the logo (Slightly Lighter Dark Green and Red theme) */
+        :root {
+            --color-primary: #065F46; /* Lighter Forest Green */
+            --color-secondary: #B91C1C; /* Brick Red */
+            --color-background: #F4F8F5; 
+            --color-text: #1F2937; /* Dark Gray */
+            --color-alt-row: #F7FDF7;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-background); 
+            color: var(--color-text);
+        }
+        header { background-color: white; }
+        .text-primary { color: var(--color-primary); }
+        .bg-primary { background-color: var(--color-primary); }
+
+        /* Custom shadow for cards */
+        .card-shadow {
+            box-shadow: 0 10px 15px -3px rgba(6, 95, 70, 0.1), 0 4px 6px -2px rgba(6, 95, 70, 0.05);
+            transition: transform 0.3s ease;
+        }
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: white;
+            padding: 0.5rem 1rem; 
+            border-radius: 9999px; /* Rounded shape */
+            font-weight: 600;
+            transition: background-color 0.3s;
+            font-size: 1rem; 
+            line-height: 1.5; 
+            display: inline-flex; 
+            align-items: center; 
+        }
+        .btn-primary:hover {
+            background-color: #044F36;
+        }
+
+        /* Responsive table styling */
+        .responsive-table-container {
+            overflow-x: auto;
+            max-width: 100%;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+            font-size: 0.95rem;
+        }
+        .data-table th, .data-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #E5E7EB;
+        }
+        .data-table th {
+            background-color: #065F46; /* Primary Green */
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+        }
+        .data-table tbody tr:nth-child(odd) {
+            background-color: #FFFFFF;
+        }
+        .data-table tbody tr:nth-child(even) {
+            background-color: #F0FDF4; /* Very light green */
+        }
+        .data-table tbody tr:hover {
+            background-color: #DCFCE7;
+        }
+
+        /* Leaflet Map Container Style */
+        #map, #map-mr {
+            height: 480px;
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            z-index: 1; /* Ensure map stays below header */
+        }
+
+        /* MODAL */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        /* Loading spinner CSS (Matching index.html) */
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid white;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Navigation -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20 gap-4">
+                <!-- Logo/Site Name - Aligned and Responsive -->
+                <div class="flex-shrink-0 flex items-center"> 
+                    <a href="index.html" class="flex items-center space-x-3">
+                        <img src="IMG-20251214-WA0002.jpg" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/64x64/9CA3AF/ffffff?text=LOGO';" 
+                             alt="Maharashtra Gram Darpan Logo" 
+                             class="w-12 h-12 lg:w-16 lg:h-16 rounded-md flex items-center justify-center font-bold text-xl object-cover">
+                        <span class="text-xl lg:text-xl xl:text-2xl font-extrabold text-primary leading-tight">Maharashtra Gram Darpan</span>
+                    </a>
+                </div>
+
+                <!-- Navigation Menu (Desktop) -->
+                <nav class="hidden lg:flex space-x-6 xl:space-x-12 items-center">
+                    <a href="index.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Home</a>
+                    <a href="about-us.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">About Us</a>
+                    <a href="our-work.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Our Work</a>
+                    <a href="programmes.html" class="text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Programmes</a>
+                    <a href="trustees-board.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Trustees/Board</a>
+                    <a href="contact.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Contact</a>
+                    <button id="lang-toggle-button" class="btn-primary flex items-center justify-center text-sm xl:text-base px-4 py-2" onclick="toggleLanguage()">
+                        <span id="lang-text">मराठी (MR)</span>
+                        <div id="lang-spinner" class="spinner hidden ml-2"></div>
+                    </button>
+                </nav>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-button" class="lg:hidden p-2 rounded-md text-gray-700 hover:text-primary focus:outline-none transition duration-150 ease-in-out">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden lg:hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 shadow-inner bg-gray-50">
+                <a href="index.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Home</a>
+                <a href="about-us.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">About Us</a>
+                <a href="our-work.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Our Work</a>
+                <a href="programmes.html" class="block px-3 py-2 rounded-md text-base font-medium text-primary bg-gray-50 hover:bg-gray-100">Programmes</a>
+                <a href="trustees-board.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Trustees/Board</a>
+                <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Contact</a>
+                <button class="block px-3 py-2 rounded-md text-base font-medium text-white bg-primary text-center w-full mt-2" onclick="toggleLanguage()">
+                    <span id="mobile-lang-text">मराठी (MR)</span>
+                    <div id="mobile-lang-spinner" class="spinner hidden ml-2"></div>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Modal Structure -->
+    <div id="program-modal-overlay" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h4 class="text-2xl font-bold text-primary" id="modal-location"></h4>
+                <button onclick="closeModal()" class="text-3xl">&times;</button>
+            </div>
+            <p id="modal-program-title" class="mb-3 font-semibold text-gray-800"></p>
+            <p id="modal-program-details" class="text-sm text-gray-600 mb-4"></p>
+            <a id="modal-link" href="#" class="btn-primary text-center w-full justify-center">View Full Details</a>
+        </div>
+    </div>
+
+    <!-- Main Content AREA (English Default) -->
+    <main id="main-content-area">
+        <section class="py-16 md:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-2">Key Programmes</h2>
+                    <p class="text-xl text-primary font-semibold max-w-4xl mx-auto">
+                        Detailed overview of our impact across multiple sectors.
+                    </p>
+                </div>
+
+                <div class="space-y-16 text-sm text-gray-700">
+                    
+                    <!-- 1. Women Self Help Group (SHG) & Graph -->
+                    <div id="programme-shg" class="bg-white p-8 rounded-xl card-shadow border-t-8 border-primary">
+                        <div class="flex flex-col md:flex-row gap-8">
+                            <div class="md:w-1/2">
+                                <h3 class="text-3xl font-bold mb-4 text-primary">Women Self Help Groups (SHGs)</h3>
+                                <p class="text-lg mb-4 text-gray-600">
+                                    The foundation of women empowerment is self-help groups. Since 2010-11, Maharashtra Gram Darpan has organized health camps, nutrition competitions, and legal guidance.
+                                </p>
+                                <p class="text-lg mb-4 text-gray-600">
+                                    Since 2012, loans have been provided by NABARD Finance Company (NABFIN). Women have started flour mills, animal husbandry, and even kindergartens which have progressed to secondary schools educating 140 students.
+                                </p>
+                                <p class="font-semibold text-primary">Repayment Rate: 99.2% (Appreciated by NABARD)</p>
+                            </div>
+                            <!-- Chart Container -->
+                            <div class="md:w-1/2 bg-gray-50 rounded-lg p-4">
+                                <canvas id="shgLoanChart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <h4 class="text-xl font-bold mb-4 text-gray-800">Progress of SHG Formation & Linkage (NABFIN)</h4>
+                            <div class="responsive-table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Year</th>
+                                            <th>SHGs Formed</th>
+                                            <th>Linked</th>
+                                            <th>Loan Amt (Lakh ₹)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>2012-13</td><td>174</td><td>40</td><td>73.00</td></tr>
+                                        <tr><td>2013-14</td><td>171</td><td>41</td><td>75.00</td></tr>
+                                        <tr><td>2014-15</td><td>117</td><td>43</td><td>81.00</td></tr>
+                                        <tr><td>2018-19</td><td>57</td><td>25</td><td>37.50</td></tr>
+                                        <tr><td>2021-22</td><td>45</td><td>22</td><td>31.50</td></tr>
+                                        <tr><td>2022-23</td><td>152</td><td>31</td><td>51.50</td></tr>
+                                        <tr><td>2023-24</td><td>137</td><td>52</td><td>100.00</td></tr>
+                                        <tr><td>2024-25</td><td>137</td><td>50</td><td>89.50</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Jal-Jivan Mission -->
+                    <div id="programme-wash" class="bg-white p-8 rounded-xl card-shadow border-t-8 border-secondary">
+                        <h3 class="text-3xl font-bold mb-4 text-secondary">Jal-Jivan Mission</h3>
+                        <p class="text-lg mb-6 text-gray-600">
+                            Implemented by the Water and Sanitation Office (Govt. of Maharashtra). Through this initiative, training and demonstrations are conducted to make water and sanitation programs accessible to every person.
+                        </p>
+                        
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <!-- Amravati Table -->
+                            <div>
+                                <h4 class="text-xl font-bold mb-3 text-gray-800">Amravati District (14 Talukas)</h4>
+                                <div class="responsive-table-container">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Year</th>
+                                                <th>Training Type</th>
+                                                <th>Target</th>
+                                                <th>Achieved</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td>2022-23</td><td>Orientation</td><td>4205</td><td>4205</td></tr>
+                                            <tr><td>2023-24</td><td>Maintenance</td><td>4205</td><td>3845</td></tr>
+                                            <tr><td>-</td><td>Water Quality</td><td>841</td><td>807</td></tr>
+                                            <tr><td>2024-25</td><td>Water Literacy</td><td>4205</td><td>2347</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- Gondia Table -->
+                            <div>
+                                <h4 class="text-xl font-bold mb-3 text-gray-800">Gondia District (8 Talukas)</h4>
+                                <div class="responsive-table-container">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Year</th>
+                                                <th>Training Type</th>
+                                                <th>Target</th>
+                                                <th>Achieved</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td>2022-23</td><td>Orientation</td><td>2735</td><td>2735</td></tr>
+                                            <tr><td>2023-24</td><td>Maintenance</td><td>2735</td><td>2735</td></tr>
+                                            <tr><td>-</td><td>Water Quality</td><td>1415</td><td>1385</td></tr>
+                                            <tr><td>2024-25</td><td>Water Literacy</td><td>2735</td><td>2670</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Swachh Bharat Mission -->
+                    <div id="programme-sbm" class="bg-white p-8 rounded-xl card-shadow border-t-8 border-primary">
+                        <h3 class="text-3xl font-bold mb-4 text-primary">Swachh Bharat Mission</h3>
+                        <p class="text-lg mb-6 text-gray-600">
+                            Focused on sewage and solid waste management. We were selected as the implementing agency to prepare budgets for waste management in 43 tribal villages in Dharani taluka.
+                        </p>
+                        
+                        <div class="responsive-table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>District</th>
+                                        <th>Year</th>
+                                        <th>Job Description</th>
+                                        <th>Target</th>
+                                        <th>Achieved</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="font-bold">Amravati</td>
+                                        <td>2022-23</td>
+                                        <td>Wastewater & Solid Waste Mgmt</td>
+                                        <td>4205</td>
+                                        <td>4205</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold">Amravati (Dharani)</td>
+                                        <td>2023-24</td>
+                                        <td>Village Level Implementing Agency</td>
+                                        <td>43 Villages</td>
+                                        <td>43 Villages</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold">Gondia</td>
+                                        <td>2022-23</td>
+                                        <td>Wastewater & Solid Waste Mgmt</td>
+                                        <td>2735</td>
+                                        <td>2493</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold">Hingoli</td>
+                                        <td>2022-23</td>
+                                        <td>Wastewater & Solid Waste Mgmt</td>
+                                        <td>2740</td>
+                                        <td>In Progress</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- 4. Health & Maha Arogya Shibir -->
+                    <div id="programme-health" class="bg-white p-8 rounded-xl card-shadow border-t-8 border-secondary">
+                        <div class="flex flex-col md:flex-row gap-8">
+                            <div class="md:w-1/2">
+                                <h3 class="text-3xl font-bold mb-4 text-secondary">Maha Arogya Shibir</h3>
+                                <p class="text-lg mb-4 text-gray-600">
+                                    Organizing free medical camps since 2022. Free brain, heart, and eye surgeries are performed, followed by the distribution of medicines and glasses.
+                                </p>
+                                <h4 class="text-xl font-bold mb-2 text-gray-800">AIDS Awareness</h4>
+                                <p class="text-gray-600 mb-4">
+                                    Implemented for 120 ASHA workers in Tivasa Taluka with Taluka Health Officer. Technical guidance and booklets were distributed.
+                                </p>
+                            </div>
+                            <div class="md:w-1/2">
+                                <h4 class="text-xl font-bold mb-3 text-gray-800">Impact Statistics</h4>
+                                <div class="responsive-table-container">
+                                    <table class="data-table">
+                                        <tbody>
+                                            <tr><td class="font-semibold">Villages Covered</td><td>17</td></tr>
+                                            <tr><td class="font-semibold">Camps Held</td><td>48</td></tr>
+                                            <tr><td class="font-semibold">Total Patients</td><td>74,607</td></tr>
+                                            <tr><td class="font-semibold">Glasses Distributed</td><td>29,010</td></tr>
+                                            <tr><td class="font-semibold">Operations (Eye/Heart/Brain)</td><td>4,832</td></tr>
+                                            <tr><td class="font-semibold">Value of Services</td><td>₹ 2.2 Cr.</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 5. Agriculture & Environment -->
+                    <div id="programme-agri" class="bg-white p-8 rounded-xl card-shadow border-t-8 border-primary">
+                        <h3 class="text-3xl font-bold mb-6 text-primary">Agriculture & Environment</h3>
+                        <div class="grid md:grid-cols-3 gap-6">
+                            <!-- Silt Free Dam -->
+                            <div class="bg-green-50 p-6 rounded-lg">
+                                <h4 class="text-xl font-bold mb-2 text-gray-800">Silt-Free Dam</h4>
+                                <p class="text-gray-600">
+                                    Implemented in Majri Mhasla village (Nandgaon Khandeshwar). Removing fertile silt from dams increases water storage and boosts farm productivity when applied to fields.
+                                </p>
+                            </div>
+                            <!-- Tree Plantation -->
+                            <div class="bg-green-50 p-6 rounded-lg">
+                                <h4 class="text-xl font-bold mb-2 text-gray-800">Tree Plantation</h4>
+                                <p class="text-gray-600">
+                                    Worked for 3 years on the 40km stretch of Amravati-Nagpur highway for tree plantation and enhancement, providing employment to local women.
+                                </p>
+                            </div>
+                            <!-- Shankar Pat -->
+                            <div class="bg-green-50 p-6 rounded-lg">
+                                <h4 class="text-xl font-bold mb-2 text-gray-800">Shankar Pat (Agri Fair)</h4>
+                                <p class="text-gray-600">
+                                    Organized from 2023-24 to exchange agricultural information and provide stress relief. Competitors from other districts participate, with active involvement from women.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 6. Skill Training -->
+                    <div id="programme-skill" class="bg-white p-8 rounded-xl card-shadow border-t-8 border-secondary">
+                        <h3 class="text-3xl font-bold mb-4 text-secondary">Skill Training</h3>
+                        <p class="text-lg text-gray-600">
+                            Approved by the Maharashtra Board of Vocational Education. We conduct batches for <strong>Shivan Kam (Tailoring)</strong> and <strong>Beauty Parlor</strong> training. Additionally recognized as a training institute for the Watershed Area Program by the Department of Agriculture.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- MAP SECTION -->
+        <section id="map-section" class="py-16 md:py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-4 text-center">
+                <h2 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4">Our Operational Reach</h2>
+                <p class="text-xl text-primary font-semibold max-w-4xl mx-auto mb-10">
+                    Click on a location to view details
+                </p>
+                <div id="map"></div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Hidden container for Marathi content -->
+    <div id="marathi-content-area" style="display: none;">
+        <section class="py-16 md:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-2">प्रमुख कार्यक्रम आणि उपक्रम</h2>
+                    <p class="text-xl text-primary font-semibold max-w-4xl mx-auto">
+                        आरोग्य, उपजीविका आणि पर्यावरणामध्ये शाश्वत बदल घडवणे.
+                    </p>
+                </div>
+
+                <div class="space-y-16 text-sm text-gray-700">
+                    
+                    <!-- 1. Women Self Help Group (SHG) & Graph (Marathi) -->
+                    <div id="programme-shg-mr" class="bg-white p-8 rounded-xl card-shadow border-t-8 border-primary">
+                        <div class="flex flex-col md:flex-row gap-8">
+                            <div class="md:w-1/2">
+                                <h3 class="text-3xl font-bold mb-4 text-primary">महिला बचत गट (SHGs)</h3>
+                                <p class="text-lg mb-4 text-gray-600">
+                                    महिला सक्षमीकरणाचा पाया म्हणजे बचत गट. २०१०-११ पासून, महाराष्ट्र ग्राम दर्पणने आरोग्य शिबिरे, पोषण स्पर्धा आणि कायदेशीर मार्गदर्शन आयोजित केले आहे.
+                                </p>
+                                <p class="text-lg mb-4 text-gray-600">
+                                    २०१२ पासून, NABARD फायनान्स कंपनी (NABFIN) द्वारे कर्ज प्रदान केले जात आहे. महिलांनी पिठाच्या गिरण्या, पशुपालन आणि बालवाड्या सुरू केल्या आहेत, ज्यांचे माध्यमिक शाळांमध्ये रूपांतर झाले आहे.
+                                </p>
+                                <p class="font-semibold text-primary">परतफेड दर: ९९.२% (नाबार्डद्वारे कौतुक)</p>
+                            </div>
+                            <!-- Chart Container (Reusable ID for Graph) -->
+                            <div class="md:w-1/2 bg-gray-50 rounded-lg p-4">
+                                <canvas id="shgLoanChartMr"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <h4 class="text-xl font-bold mb-4 text-gray-800">NABFIN कर्ज वाटप प्रगती</h4>
+                            <div class="responsive-table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>वर्ष</th>
+                                            <th>गट स्थापना</th>
+                                            <th>जोडणी</th>
+                                            <th>कर्ज रक्कम (लाख ₹)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>२०१२-१३</td><td>१७४</td><td>४०</td><td>७३.००</td></tr>
+                                        <tr><td>२०१३-१४</td><td>१७१</td><td>४१</td><td>७५.००</td></tr>
+                                        <tr><td>२०१४-१५</td><td>११७</td><td>४३</td><td>८१.००</td></tr>
+                                        <tr><td>२०१८-१९</td><td>५७</td><td>२५</td><td>३७.५०</td></tr>
+                                        <tr><td>२०२१-२२</td><td>४५</td><td>२२</td><td>३१.५०</td></tr>
+                                        <tr><td>२०२२-२३</td><td>१५२</td><td>३१</td><td>५१.५०</td></tr>
+                                        <tr><td>२०२३-२४</td><td>१३७</td><td>५२</td><td>१००.००</td></tr>
+                                        <tr><td>२०२४-२५</td><td>१३७</td><td>५०</td><td>८९.५०</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Jal-Jivan Mission (Marathi) -->
+                    <div id="programme-wash-mr" class="bg-white p-8 rounded-xl card-shadow border-t-8 border-secondary">
+                        <h3 class="text-3xl font-bold mb-4 text-secondary">जल-जीवन मिशन</h3>
+                        <p class="text-lg mb-6 text-gray-600">
+                            महाराष्ट्र शासनाच्या पाणी आणि स्वच्छता विभागामार्फत अंमलबजावणी. या उपक्रमाद्वारे, पाणी आणि स्वच्छता कार्यक्रम प्रत्येक व्यक्तीपर्यंत पोहोचवण्यासाठी प्रशिक्षण आणि प्रात्यक्षिके आयोजित केली जातात.
+                        </p>
+                        
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <!-- Amravati Table -->
+                            <div>
+                                <h4 class="text-xl font-bold mb-3 text-gray-800">अमरावती जिल्हा (१४ तालुके)</h4>
+                                <div class="responsive-table-container">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>वर्ष</th>
+                                                <th>प्रशिक्षण प्रकार</th>
+                                                <th>उद्दिष्ट</th>
+                                                <th>साध्य</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td>२०२२-२३</td><td>अभिविन्यास</td><td>४२०५</td><td>४२०५</td></tr>
+                                            <tr><td>२०२३-२४</td><td>देखभाल</td><td>४२०५</td><td>३८४५</td></tr>
+                                            <tr><td>-</td><td>पाणी गुणवत्ता</td><td>८४१</td><td>८०७</td></tr>
+                                            <tr><td>२०२४-२५</td><td>जल साक्षरता</td><td>४२०५</td><td>२३४७</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- Gondia Table -->
+                            <div>
+                                <h4 class="text-xl font-bold mb-3 text-gray-800">गोंदिया जिल्हा (८ तालुके)</h4>
+                                <div class="responsive-table-container">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>वर्ष</th>
+                                                <th>प्रशिक्षण प्रकार</th>
+                                                <th>उद्दिष्ट</th>
+                                                <th>साध्य</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td>२०२२-२३</td><td>अभिविन्यास</td><td>२७३५</td><td>२७३५</td></tr>
+                                            <tr><td>२०२३-२४</td><td>देखभाल</td><td>२७३५</td><td>२७३५</td></tr>
+                                            <tr><td>-</td><td>पाणी गुणवत्ता</td><td>१४१५</td><td>१३८५</td></tr>
+                                            <tr><td>२०२४-२५</td><td>जल साक्षरता</td><td>२७३५</td><td>२६७०</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Swachh Bharat Mission (Marathi) -->
+                    <div id="programme-sbm-mr" class="bg-white p-8 rounded-xl card-shadow border-t-8 border-primary">
+                        <h3 class="text-3xl font-bold mb-4 text-primary">स्वच्छ भारत मिशन</h3>
+                        <p class="text-lg mb-6 text-gray-600">
+                            सांडपाणी आणि घनकचरा व्यवस्थापनावर लक्ष केंद्रित. धारणी तालुक्यातील ४३ आदिवासी गावांमधील कचरा व्यवस्थापनासाठी अर्थसंकल्प तयार करण्यासाठी आमची अंमलबजावणी संस्था म्हणून निवड झाली.
+                        </p>
+                        
+                        <div class="responsive-table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>जिल्हा</th>
+                                        <th>वर्ष</th>
+                                        <th>कामाचे स्वरूप</th>
+                                        <th>उद्दिष्ट</th>
+                                        <th>साध्य</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="font-bold">अमरावती</td>
+                                        <td>२०२२-२३</td>
+                                        <td>सांडपाणी व घनकचरा व्यवस्थापन</td>
+                                        <td>४२०५</td>
+                                        <td>४२०५</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold">अमरावती (धारणी)</td>
+                                        <td>२०२३-२४</td>
+                                        <td>ग्रामस्तरीय अंमलबजावणी संस्था</td>
+                                        <td>४३ गावे</td>
+                                        <td>४३ गावे</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold">गोंदिया</td>
+                                        <td>२०२२-२३</td>
+                                        <td>सांडपाणी व घनकचरा व्यवस्थापन</td>
+                                        <td>२७३५</td>
+                                        <td>२४९३</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-bold">हिंगोली</td>
+                                        <td>२०२२-२३</td>
+                                        <td>सांडपाणी व घनकचरा व्यवस्थापन</td>
+                                        <td>२७४०</td>
+                                        <td>प्रगतीपथावर</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- 4. Health & Maha Arogya Shibir (Marathi) -->
+                    <div id="programme-health-mr" class="bg-white p-8 rounded-xl card-shadow border-t-8 border-secondary">
+                        <div class="flex flex-col md:flex-row gap-8">
+                            <div class="md:w-1/2">
+                                <h3 class="text-3xl font-bold mb-4 text-secondary">महा आरोग्य शिबिरे</h3>
+                                <p class="text-lg mb-4 text-gray-600">
+                                    २०२२ पासून मोफत वैद्यकीय शिबिरांचे आयोजन. मेंदू, हृदय आणि डोळ्यांच्या मोफत शस्त्रक्रिया केल्या जातात, त्यानंतर औषधे आणि चष्मा वाटप केले जाते.
+                                </p>
+                                <h4 class="text-xl font-bold mb-2 text-gray-800">एड्स जागरूकता</h4>
+                                <p class="text-gray-600 mb-4">
+                                    तिवसा तालुक्यातील १२० आशा सेविकांसाठी तालुका आरोग्य अधिकाऱ्यांच्या सहकार्याने अंमलबजावणी. तांत्रिक मार्गदर्शन आणि पुस्तिका वाटप.
+                                </p>
+                            </div>
+                            <div class="md:w-1/2">
+                                <h4 class="text-xl font-bold mb-3 text-gray-800">प्रभाव आकडेवारी</h4>
+                                <div class="responsive-table-container">
+                                    <table class="data-table">
+                                        <tbody>
+                                            <tr><td class="font-semibold">गावे</td><td>१७</td></tr>
+                                            <tr><td class="font-semibold">शिबिरे</td><td>४८</td></tr>
+                                            <tr><td class="font-semibold">एकूण रुग्ण</td><td>७४,६०७</td></tr>
+                                            <tr><td class="font-semibold">चष्मा वाटप</td><td>२९,०१०</td></tr>
+                                            <tr><td class="font-semibold">शस्त्रक्रिया (डोळे/हृदय/मेंदू)</td><td>४,८३२</td></tr>
+                                            <tr><td class="font-semibold">सेवांचे मूल्य</td><td>₹ २.२ कोटी</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 5. Agriculture & Environment (Marathi) -->
+                    <div id="programme-agri-mr" class="bg-white p-8 rounded-xl card-shadow border-t-8 border-primary">
+                        <h3 class="text-3xl font-bold mb-6 text-primary">कृषी आणि पर्यावरण</h3>
+                        <div class="grid md:grid-cols-3 gap-6">
+                            <!-- Silt Free Dam -->
+                            <div class="bg-green-50 p-6 rounded-lg">
+                                <h4 class="text-xl font-bold mb-2 text-gray-800">गाळमुक्त धरण</h4>
+                                <p class="text-gray-600">
+                                    माजरी म्हसला (नांदगाव खंडेश्वर) येथे अंमलबजावणी. धरणातील सुपीक गाळ काढल्याने पाणी साठवण क्षमता वाढते आणि शेतात टाकल्यास उत्पादकता वाढते.
+                                </p>
+                            </div>
+                            <!-- Tree Plantation -->
+                            <div class="bg-green-50 p-6 rounded-lg">
+                                <h4 class="text-xl font-bold mb-2 text-gray-800">वृक्षारोपण</h4>
+                                <p class="text-gray-600">
+                                    अमरावती-नागपूर महामार्गाच्या ४० किमी परिसरात वृक्षारोपण आणि संवर्धनासाठी ३ वर्षे काम केले, स्थानिक महिलांना रोजगार दिला.
+                                </p>
+                            </div>
+                            <!-- Shankar Pat -->
+                            <div class="bg-green-50 p-6 rounded-lg">
+                                <h4 class="text-xl font-bold mb-2 text-gray-800">शंकर पाट (कृषी मेळावा)</h4>
+                                <p class="text-gray-600">
+                                    २०२३-२४ पासून कृषी माहितीची देवाणघेवाण आणि तणावमुक्तीसाठी आयोजन. इतर जिल्ह्यांतील स्पर्धकांचा सहभाग आणि महिलांचा सक्रिय सहभाग.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 6. Skill Training (Marathi) -->
+                    <div id="programme-skill-mr" class="bg-white p-8 rounded-xl card-shadow border-t-8 border-secondary">
+                        <h3 class="text-3xl font-bold mb-4 text-secondary">कौशल्य प्रशिक्षण</h3>
+                        <p class="text-lg text-gray-600">
+                            महाराष्ट्र व्यवसाय शिक्षण मंडळाद्वारे मान्यताप्राप्त. आम्ही <strong>शिवणकाम</strong> आणि <strong>ब्युटी पार्लर</strong> प्रशिक्षणाच्या तुकड्या चालवतो. तसेच कृषी विभागाद्वारे पाणलोट क्षेत्र कार्यक्रमासाठी प्रशिक्षण संस्था म्हणून मान्यताप्राप्त.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section id="map-section-mr" class="py-16 md:py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-4 text-center">
+                <h2 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4">आमचे कार्यक्षेत्र</h2>
+                <div id="map-mr"></div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <!-- NGO Info -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-primary">Maharashtra Gram Darpan</h3>
+                    <p class="text-sm text-gray-400">Committed to creating a strong and independent society without inequalities and discrimination.</p>
+                </div>
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white transition duration-150">Home</a></li>
+                        <li><a href="about-us.html" class="text-gray-400 hover:text-white transition duration-150">About Us</a></li>
+                        <li><a href="our-work.html" class="text-gray-400 hover:text-white transition duration-150">Our Work</a></li>
+                        <li><a href="programmes.html" class="text-gray-400 hover:text-white transition duration-150">Programmes</a></li>
+                        <li><a href="trustees-board.html" class="text-gray-400 hover:text-white transition duration-150">Leadership</a></li>
+                        <li><a href="contact.html" class="text-gray-400 hover:text-white transition duration-150">Contact</a></li>
+                    </ul>
+                </div>
+                <!-- Contact -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Contact</h3>
+                    <p class="text-sm text-gray-400">Amravati-444601, MH</p>
+                    <p class="text-sm text-gray-400">Mob: 9373471897</p>
+                    <!-- UPDATED: Added whitespace-nowrap to keep email in one line -->
+                    <p class="text-sm text-gray-400 whitespace-nowrap">Email: maharashtragramdarpan@gmail.com</p>
+                </div>
+                <!-- Social & Legal -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Legal</h3>
+                    <p class="text-sm text-gray-400">FCRA No: 083740062</p>
+                    <p class="text-sm text-gray-400">80G Certified</p>
+                    <p class="text-sm text-gray-400">ISO 9000:2015</p>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-8 border-t border-gray-700 text-center">
+                <p class="text-sm text-gray-400">&copy; 2025 Maharashtra Gram Darpan. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        // --- CHART.JS GRAPHS ---
+        document.addEventListener('DOMContentLoaded', function() {
+            // English Chart
+            const ctx = document.getElementById('shgLoanChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['2012-13', '2013-14', '2014-15', '2018-19', '2021-22', '2022-23', '2023-24', '2024-25'],
+                    datasets: [{
+                        label: 'Loan Amount (Lakh ₹)',
+                        data: [73.0, 75.0, 81.0, 37.5, 31.5, 51.5, 100.0, 89.5],
+                        backgroundColor: 'rgba(6, 95, 70, 0.6)', 
+                        borderColor: 'rgba(6, 95, 70, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: { legend: { position: 'bottom' } },
+                    scales: { y: { beginAtZero: true, title: { display: true, text: 'Amount in Lakhs' } } }
+                }
+            });
+
+            // Marathi Chart (Same data, just initialized for the Marathi tab)
+            const ctxMr = document.getElementById('shgLoanChartMr').getContext('2d');
+            new Chart(ctxMr, {
+                type: 'bar',
+                data: {
+                    labels: ['२०१२-१३', '२०१३-१४', '२०१४-१५', '२०१८-१९', '२०२१-२२', '२०२२-२३', '२०२३-२४', '२०२४-२५'],
+                    datasets: [{
+                        label: 'कर्ज रक्कम (लाख ₹)',
+                        data: [73.0, 75.0, 81.0, 37.5, 31.5, 51.5, 100.0, 89.5],
+                        backgroundColor: 'rgba(6, 95, 70, 0.6)', 
+                        borderColor: 'rgba(6, 95, 70, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: { legend: { position: 'bottom' } },
+                    scales: { y: { beginAtZero: true, title: { display: true, text: 'रक्कम (लाखात)' } } }
+                }
+            });
+        });
+
+        // --- LEAFLET MAP INITIALIZATION (ENGLISH) ---
+        const map = L.map('map').setView([20.9320, 77.7523], 7);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        const locations = [
+            { name: "Amravati", coords: [20.9374, 77.7796], title: "Women's Skill Training", details: "SHG linkage, vocational training and sanitation programs.", link: "amravati-programme.html" },
+            { name: "Gondia", coords: [21.4624, 80.1972], title: "WASH Programs", details: "Jal-Jivan Mission and water sanitation initiatives.", link: "gondia-programme.html" },
+            { name: "Dharani", coords: [21.6333, 77.2000], title: "Tribal Development", details: "Plastic-free villages and waste management.", link: "dharani-programme.html" },
+            { name: "Majri Mhasla", coords: [20.7000, 77.9000], title: "Agriculture Initiative", details: "Silt-free dam and soil fertility projects.", link: "majri-programme.html" },
+            { name: "Hingoli", coords: [19.7178, 77.1493], title: "Swachh Bharat Mission", details: "Training for 2786 people from 700 villages on waste management.", link: "hingoli-programme.html" },
+            { name: "Tivasa", coords: [21.0200, 77.8200], title: "Health Awareness", details: "AIDS awareness for 120 ASHA workers & sanitation production center.", link: "tivsa-programme.html" }
+        ];
+
+        locations.forEach(loc => {
+            L.marker(loc.coords).addTo(map).on('click', () => {
+                openModal(loc.name, loc.title, loc.details, loc.link);
+            });
+        });
+
+        // --- LEAFLET MAP INITIALIZATION (MARATHI) ---
+        const mapMr = L.map('map-mr').setView([20.9320, 77.7523], 7);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(mapMr);
+        const locationsMr = [
+            { name: "अमरावती", coords: [20.9374, 77.7796], title: "महिला कौशल्य प्रशिक्षण", details: "बचत गट जोडणी, व्यावसायिक प्रशिक्षण आणि स्वच्छता कार्यक्रम.", link: "amravati-programme.html" },
+            { name: "गोंदिया", coords: [21.4624, 80.1972], title: "WASH कार्यक्रम", details: "जल-जीवन मिशन आणि पाणी स्वच्छता उपक्रम.", link: "gondia-programme.html" },
+            { name: "धारणी", coords: [21.6333, 77.2000], title: "आदिवासी विकास", details: "प्लॅस्टिकमुक्त गावे आणि कचरा व्यवस्थापन.", link: "dharani-programme.html" },
+            { name: "माजरी म्हसला", coords: [20.7000, 77.9000], title: "कृषी उपक्रम", details: "गाळमुक्त धरण आणि माती सुपीकता प्रकल्प.", link: "majri-programme.html" },
+            { name: "हिंगोली", coords: [19.7178, 77.1493], title: "स्वच्छ भारत मिशन", details: "७०० गावांमधील २७८६ लोकांसाठी कचरा व्यवस्थापन प्रशिक्षण.", link: "hingoli-programme.html" },
+            { name: "तिवासा", coords: [21.0200, 77.8200], title: "आरोग्य जनजागृती", details: "१२० आशा सेविकांसाठी एड्स जागरूकता आणि स्वच्छता उत्पादन केंद्र.", link: "tivsa-programme.html" }
+        ];
+        locationsMr.forEach(loc => {
+            L.marker(loc.coords).addTo(mapMr).on('click', () => {
+                openModal(loc.name, loc.title, loc.details, loc.link);
+            });
+        });
+
+
+        // --- MODAL & TRANSLATION LOGIC ---
+        function openModal(location, title, details, link) {
+            document.getElementById('modal-location').textContent = location;
+            document.getElementById('modal-program-title').textContent = title;
+            document.getElementById('modal-program-details').textContent = details;
+            
+            const linkBtn = document.getElementById('modal-link');
+            // Always show the button now, linking to '#' if no specific page exists yet.
+            // This is a common pattern for "Coming Soon" or placeholder links.
+            linkBtn.href = link ? link : "#"; 
+            linkBtn.style.display = 'block'; 
+            
+            // Adjust button text based on current language
+            const isMarathi = currentLanguage === 'MR';
+            linkBtn.textContent = isMarathi ? 'संपूर्ण माहिती पहा' : 'View Full Details';
+
+            document.getElementById('program-modal-overlay').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('program-modal-overlay').classList.add('hidden');
+        }
+
+        const MAIN_CONTENT_ID = 'main-content-area';
+        const MARATHI_CONTENT_ID = 'marathi-content-area';
+        const LANG_TOGGLE_KEY = 'mgd_current_lang_programmes'; // Unique key for this page
+
+        let currentLanguage = localStorage.getItem(LANG_TOGGLE_KEY) || 'EN';
+        let mainContentArea = document.getElementById(MAIN_CONTENT_ID);
+        let marathiContentArea = document.getElementById(MARATHI_CONTENT_ID);
+        let buttonTextElement = document.getElementById('lang-toggle-button');
+        let mobileButtonTextElement = document.getElementById('mobile-lang-text');
+
+        function toggleLanguage() {
+            if (!mainContentArea || !marathiContentArea) return;
+            
+            if (currentLanguage === 'EN') {
+                // Switch to Marathi
+                mainContentArea.style.display = 'none';
+                marathiContentArea.style.display = 'block';
+                currentLanguage = 'MR';
+            } else {
+                // Switch to English
+                mainContentArea.style.display = 'block';
+                marathiContentArea.style.display = 'none';
+                currentLanguage = 'EN';
+            }
+
+            // Update UI elements
+            if (currentLanguage === 'MR') {
+                if(buttonTextElement) buttonTextElement.textContent = 'English (EN)';
+                if(mobileButtonTextElement) mobileButtonTextElement.textContent = 'English (EN)';
+                // Force map resize calc when making visible
+                setTimeout(() => { mapMr.invalidateSize(); }, 100);
+            } else {
+                if(buttonTextElement) buttonTextElement.textContent = 'मराठी (MR)';
+                if(mobileButtonTextElement) mobileButtonTextElement.textContent = 'मराठी (MR)';
+                setTimeout(() => { map.invalidateSize(); }, 100);
+            }
+
+            localStorage.setItem(LANG_TOGGLE_KEY, currentLanguage);
+        }
+
+        function initializeTranslationState() {
+            if (!mainContentArea || !marathiContentArea) return;
+
+            if (currentLanguage === 'MR') {
+                mainContentArea.style.display = 'none';
+                marathiContentArea.style.display = 'block';
+                if(buttonTextElement) buttonTextElement.textContent = 'English (EN)';
+                if(mobileButtonTextElement) mobileButtonTextElement.textContent = 'English (EN)';
+                setTimeout(() => { mapMr.invalidateSize(); }, 100);
+            } else {
+                mainContentArea.style.display = 'block';
+                marathiContentArea.style.display = 'none';
+                if(buttonTextElement) buttonTextElement.textContent = 'मराठी (MR)';
+                if(mobileButtonTextElement) mobileButtonTextElement.textContent = 'मराठी (MR)';
+                setTimeout(() => { map.invalidateSize(); }, 100);
+            }
+        }
+
+        window.onload = initializeTranslationState;
+
+        // JavaScript for mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>

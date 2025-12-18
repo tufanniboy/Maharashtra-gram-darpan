@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amravati Programme - Maharashtra Gram Darpan</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles based on the logo (Slightly Lighter Dark Green and Red theme) */
+        :root {
+            --color-primary: #065F46; /* Lighter Forest Green */
+            --color-secondary: #B91C1C; /* Brick Red */
+            --color-background: #F4F8F5; 
+            --color-text: #1F2937; /* Dark Gray */
+            --color-alt-row: #F7FDF7;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-background); 
+            color: var(--color-text);
+        }
+        header { background-color: white; }
+        .text-primary { color: var(--color-primary); }
+        .bg-primary { background-color: var(--color-primary); }
+
+        /* Custom shadow for cards */
+        .card-shadow {
+            box-shadow: 0 10px 15px -3px rgba(6, 95, 70, 0.1), 0 4px 6px -2px rgba(6, 95, 70, 0.05);
+            transition: transform 0.3s ease;
+        }
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: white;
+            padding: 0.5rem 1rem; 
+            border-radius: 9999px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            font-size: 1rem; 
+            line-height: 1.5; 
+            display: inline-flex; 
+            align-items: center; 
+        }
+        .btn-primary:hover {
+            background-color: #044F36;
+        }
+
+        /* Responsive table styling */
+        .responsive-table-container {
+            overflow-x: auto;
+            max-width: 100%;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+        .data-table th, .data-table td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid #E5E7EB;
+        }
+        .data-table th {
+            background-color: #ECFDF5;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+        .data-table tbody tr:nth-child(odd) {
+            background-color: #FFFFFF;
+        }
+        .data-table tbody tr:nth-child(even) {
+            background-color: var(--color-alt-row);
+        }
+
+        /* Programme Image Styling */
+        .programme-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+            /* margin-bottom removed here, handled by wrapper */
+            border: 1px solid #e5e7eb;
+        }
+        
+        /* News Image Styling - Taller aspect ratio for papers */
+        .news-img {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            object-position: top;
+            border-radius: 0.5rem;
+            border: 1px solid #e5e7eb;
+        }
+
+        /* Loading spinner CSS (Matching index.html) */
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid white;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Navigation -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20 gap-4">
+                <!-- Logo/Site Name - Aligned and Responsive -->
+                <div class="flex-shrink-0 flex items-center"> 
+                    <a href="index.html" class="flex items-center space-x-3">
+                        <!-- Updated Logo Shape: rounded-md (square with slight radius) and object-cover to match index.html -->
+                        <img src="IMG-20251214-WA0002.jpg" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/64x64/9CA3AF/ffffff?text=LOGO';" 
+                             alt="Maharashtra Gram Darpan Logo" 
+                             class="w-12 h-12 lg:w-16 lg:h-16 rounded-md flex items-center justify-center font-bold text-xl object-cover">
+                        <span class="text-xl lg:text-xl xl:text-2xl font-extrabold text-primary leading-tight">Maharashtra Gram Darpan</span>
+                    </a>
+                </div>
+
+                <!-- Navigation Menu (Desktop) -->
+                <nav class="hidden lg:flex space-x-6 xl:space-x-12 items-center">
+                    <a href="index.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Home</a>
+                    <a href="about-us.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">About Us</a>
+                    <a href="our-work.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Our Work</a>
+                    <a href="programmes.html" class="text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Programmes</a>
+                    <a href="trustees-board.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Trustees/Board</a>
+                    <a href="contact.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Contact</a>
+                    <!-- Translation Button -->
+                    <button id="lang-toggle-button" class="btn-primary flex items-center justify-center text-sm xl:text-base px-4 py-2" onclick="toggleLanguage()">
+                        <span id="lang-text">मराठी (MR)</span>
+                        <div id="lang-spinner" class="spinner hidden ml-2"></div>
+                    </button>
+                </nav>
+
+                <!-- Mobile Menu Button - Visible on mobile/tablet, Hidden on lg+ -->
+                <button id="mobile-menu-button" class="lg:hidden p-2 rounded-md text-gray-700 hover:text-primary focus:outline-none transition duration-150 ease-in-out">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu (Hidden by default) -->
+        <div id="mobile-menu" class="hidden lg:hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 shadow-inner bg-gray-50">
+                <a href="index.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Home</a>
+                <a href="about-us.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">About Us</a>
+                <a href="our-work.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Our Work</a>
+                <a href="programmes.html" class="block px-3 py-2 rounded-md text-base font-medium text-primary bg-gray-50 hover:bg-gray-100">Programmes</a>
+                <a href="trustees-board.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Trustees/Board</a>
+                <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Contact</a>
+                <button class="block px-3 py-2 rounded-md text-base font-medium text-white bg-primary text-center w-full mt-2" onclick="toggleLanguage()">
+                    <span id="mobile-lang-text">मराठी (MR)</span>
+                    <div id="mobile-lang-spinner" class="spinner hidden ml-2"></div>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content AREA (English Default) -->
+    <main id="main-content-area">
+        <section class="py-16 md:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-2">Amravati Programme</h2>
+                    <p class="text-xl text-primary font-semibold max-w-4xl mx-auto">
+                        Comprehensive Rural Development Initiatives in Amravati District
+                    </p>
+                </div>
+
+                <div class="space-y-12 text-sm text-gray-700">
+                    
+                    <!-- Jal-Jivan Mission -->
+                    <div class="bg-white p-8 rounded-xl card-shadow border-l-8 border-primary">
+                        <div class="grid md:grid-cols-3 gap-8">
+                            <!-- Image Column -->
+                            <div class="md:col-span-1">
+                                <div class="relative group mb-6 md:mb-0">
+                                    <img src="21.jpg" 
+                                         onerror="this.onerror=null; this.src='https://placehold.co/400x300/e2e8f0/1e293b?text=Jal-Jivan+Mission';" 
+                                         alt="Jal-Jivan Mission Training" 
+                                         class="programme-img">
+                                    <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" 
+                                            class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" 
+                                            title="View Full Image">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Content Column -->
+                            <div class="md:col-span-2">
+                                <h3 class="text-2xl font-bold mb-3 text-primary">Jal-Jivan Mission</h3>
+                                <p class="text-lg mb-4">
+                                    Implemented by the Water and Sanitation Office of the Government of Maharashtra. MGD has planned training for <strong>4205 people</strong> from <strong>1587 villages</strong> across <strong>14 talukas</strong> of Amravati district.
+                                </p>
+                                <h4 class="text-xl font-semibold mb-2 text-gray-800">Training Progress:</h4>
+                                <div class="responsive-table-container">
+                                    <table class="data-table mt-4 text-base">
+                                        <thead>
+                                            <tr>
+                                                <th>Year</th>
+                                                <th>Training Type</th>
+                                                <th>Target</th>
+                                                <th>Achievement</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td>2022-23</td><td>Jal-Jivan Orientation</td><td>4205</td><td>4205</td></tr>
+                                            <tr><td>2023-24</td><td>Operational, Maintenance & Circulation</td><td>4205</td><td>3845</td></tr>
+                                            <tr><td>-</td><td>Water Quality</td><td>841</td><td>807</td></tr>
+                                            <tr><td>2024-25</td><td>Water Literacy</td><td>4205</td><td>2347</td></tr>
+                                            <tr><td>-</td><td>Information & Practical</td><td>3174</td><td>1888</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Swachh Bharat Mission -->
+                    <div class="bg-white p-8 rounded-xl card-shadow" style="border-left: 8px solid var(--color-secondary);">
+                        <div class="grid md:grid-cols-3 gap-8">
+                             <!-- Content Column (Swapped for variety on desktop) -->
+                             <div class="md:col-span-2 order-2 md:order-1">
+                                <h3 class="text-2xl font-bold mb-3" style="color: var(--color-secondary);">Swachh Bharat Mission</h3>
+                                <p class="text-lg mb-4">
+                                    Training, demonstrations, and reading materials provided for sewage and solid waste management. Key initiatives include plastic-free villages, waste-to-fertilizer projects, and reuse of polluted water.
+                                </p>
+                                <div class="responsive-table-container">
+                                    <table class="data-table mt-4 text-base">
+                                        <thead>
+                                            <tr>
+                                                <th>Year</th>
+                                                <th>Job Description</th>
+                                                <th>Target</th>
+                                                <th>Achievement</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td>2022-23</td><td>Wastewater and Solid Waste Management</td><td>4205</td><td>4205</td></tr>
+                                            <tr><td>2023-24</td><td>Budget Preparation (Village Level Agency)</td><td>43</td><td>43</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <p class="mt-4 text-base text-gray-600">
+                                    *Note: Specially selected as the implementing agency for 43 villages in the tribal-dominated <strong>Dharani taluka</strong>.
+                                </p>
+                             </div>
+                             <!-- Image Column -->
+                             <div class="md:col-span-1 order-1 md:order-2">
+                                <div class="relative group mb-6 md:mb-0">
+                                    <img src="22.jpg" 
+                                         onerror="this.onerror=null; this.src='https://placehold.co/400x300/e2e8f0/1e293b?text=Swachh+Bharat';" 
+                                         alt="Swachh Bharat Activities" 
+                                         class="programme-img">
+                                    <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" 
+                                            class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" 
+                                            title="View Full Image">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Other Initiatives -->
+                    <div class="bg-white p-8 rounded-xl card-shadow border-l-8 border-primary">
+                        <h3 class="text-2xl font-bold mb-3 text-primary">Other Key Initiatives</h3>
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div class="space-y-4">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 mt-1">
+                                        <div class="w-2 h-2 rounded-full bg-primary"></div>
+                                    </div>
+                                    <div class="ml-3">
+                                        <h5 class="text-lg font-bold text-gray-800">Silt-Free Dam & Shivar</h5>
+                                        <p class="text-base text-gray-600">Implemented in Majri Mhasla village (Nandgaon Khandeshwar taluka). Removal of silt increased water storage and improved soil fertility.</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-start mt-6">
+                                    <div class="flex-shrink-0 mt-1">
+                                        <div class="w-2 h-2 rounded-full bg-primary"></div>
+                                    </div>
+                                    <div class="ml-3">
+                                        <h5 class="text-lg font-bold text-gray-800">Women's Self-Help Groups</h5>
+                                        <p class="text-base text-gray-600">Established production centers for economic latrines at Amravati and Tiwsa.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                             <div class="space-y-4">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 mt-1">
+                                        <div class="w-2 h-2 rounded-full bg-primary"></div>
+                                    </div>
+                                    <div class="ml-3">
+                                        <h5 class="text-lg font-bold text-gray-800">Tree Plantation</h5>
+                                        <p class="text-base text-gray-600">3-year tree plantation and enhancement program in the 40 km area between Amravati to Nagpur highway.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Media Coverage Section -->
+        <section class="py-12 bg-gray-50 border-t border-gray-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-10">
+                    <h3 class="text-3xl font-bold text-gray-900 mb-2">Media Coverage</h3>
+                    <p class="text-lg text-primary font-medium">Highlighting our impact through local news features.</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- News Item 1 -->
+                    <div class="bg-white p-4 rounded-xl card-shadow">
+                        <div class="relative group">
+                            <img src="17.jpg" 
+                                 onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=News+Clipping+1';" 
+                                 alt="News: Water Initiative Success" 
+                                 class="news-img">
+                            <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" 
+                                    class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" 
+                                    title="View Full Image">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                                </svg>
+                            </button>
+                        </div>
+                        <p class="text-center text-gray-700 font-medium mt-3">Recognition for Water Conservation Efforts</p>
+                    </div>
+                    
+                    <!-- News Item 2 -->
+                    <div class="bg-white p-4 rounded-xl card-shadow">
+                        <div class="relative group">
+                            <img src="tree2.jpg" 
+                                 onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=News+Clipping+2';" 
+                                 alt="News: Health Camp Impact" 
+                                 class="news-img">
+                            <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" 
+                                    class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" 
+                                    title="View Full Image">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                                </svg>
+                            </button>
+                        </div>
+                        <p class="text-center text-gray-700 font-medium mt-3">Promote environmental conservation with public participation</p>
+                    </div>
+
+                    <!-- News Item 3 -->
+                    <div class="bg-white p-4 rounded-xl card-shadow">
+                        <div class="relative group">
+                            <img src="16.jpg" 
+                                 onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=News+Clipping+3';" 
+                                 alt="News: Women Empowerment" 
+                                 class="news-img">
+                            <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" 
+                                    class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" 
+                                    title="View Full Image">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                                </svg>
+                            </button>
+                        </div>
+                        <p class="text-center text-gray-700 font-medium mt-3">SHGs transforming rural economy</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Hidden container for Marathi content -->
+    <div id="marathi-content-area" style="display: none;">
+        <section class="py-16 md:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-2">अमरावती कार्यक्रम</h2>
+                    <p class="text-xl text-primary font-semibold max-w-4xl mx-auto">
+                        अमरावती जिल्ह्यातील सर्वसमावेशक ग्रामीण विकास उपक्रम
+                    </p>
+                </div>
+
+                <div class="space-y-12 text-sm text-gray-700">
+                    
+                    <!-- Jal-Jivan Mission (Marathi) -->
+                    <div class="bg-white p-8 rounded-xl card-shadow border-l-8 border-primary">
+                        <div class="grid md:grid-cols-3 gap-8">
+                            <div class="md:col-span-1">
+                                <div class="relative group mb-6 md:mb-0">
+                                    <img src="21.jpg" 
+                                         onerror="this.onerror=null; this.src='https://placehold.co/400x300/e2e8f0/1e293b?text=Jal-Jivan+Mission';" 
+                                         alt="जल-जीवन मिशन प्रशिक्षण" 
+                                         class="programme-img">
+                                    <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" 
+                                            class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" 
+                                            title="View Full Image">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="md:col-span-2">
+                                <h3 class="text-2xl font-bold mb-3 text-primary">जल-जीवन मिशन</h3>
+                                <p class="text-lg mb-4">
+                                    महाराष्ट्र शासनाच्या पाणी व स्वच्छता विभागामार्फत अंमलबजावणी. MGD ने अमरावती जिल्ह्यातील <strong>१४ तालुक्यातील १५८७ गावांमधील ४२०५ लोकांच्या</strong> प्रशिक्षणाचे नियोजन केले आहे.
+                                </p>
+                                <h4 class="text-xl font-semibold mb-2 text-gray-800">प्रशिक्षण प्रगती:</h4>
+                                <div class="responsive-table-container">
+                                    <table class="data-table mt-4 text-base">
+                                        <thead>
+                                            <tr>
+                                                <th>वर्ष</th>
+                                                <th>प्रशिक्षण प्रकार</th>
+                                                <th>लक्ष्य</th>
+                                                <th>प्राप्ती</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td>२०२२-२३</td><td>जल-जीवन ओरिएंटेशन</td><td>४२०५</td><td>४२०५</td></tr>
+                                            <tr><td>२०२३-२४</td><td>कार्यरत, देखभाल आणि परिभ्रमण</td><td>४२०५</td><td>३८४५</td></tr>
+                                            <tr><td>-</td><td>पाण्याची गुणवत्ता</td><td>८४१</td><td>८०७</td></tr>
+                                            <tr><td>२०२४-२५</td><td>जल साक्षरता</td><td>४२०५</td><td>२३४७</td></tr>
+                                            <tr><td>-</td><td>माहिती आणि प्रात्यक्षिक</td><td>३१७४</td><td>१८८८</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Swachh Bharat Mission (Marathi) -->
+                    <div class="bg-white p-8 rounded-xl card-shadow" style="border-left: 8px solid var(--color-secondary);">
+                        <div class="grid md:grid-cols-3 gap-8">
+                             <div class="md:col-span-2 order-2 md:order-1">
+                                <h3 class="text-2xl font-bold mb-3" style="color: var(--color-secondary);">स्वच्छ भारत मिशन</h3>
+                                <p class="text-lg mb-4">
+                                    सांडपाणी आणि घनकचरा व्यवस्थापनासाठी प्रशिक्षण, प्रात्यक्षिके आणि वाचन साहित्य. प्लॅस्टिकमुक्त गावे, कचऱ्यापासून खत आणि दूषित पाण्याचा पुनर्वापर हे मुख्य उपक्रम आहेत.
+                                </p>
+                                <div class="responsive-table-container">
+                                    <table class="data-table mt-4 text-base">
+                                        <thead>
+                                            <tr>
+                                                <th>वर्ष</th>
+                                                <th>कामाचे वर्णन</th>
+                                                <th>लक्ष्य</th>
+                                                <th>प्राप्ती</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td>२०२२-२३</td><td>सांडपाणी आणि घनकचरा व्यवस्थापन</td><td>४२०५</td><td>४२०५</td></tr>
+                                            <tr><td>२०२३-२४</td><td>बजेट तयार करणे (ग्रामस्तरीय संस्था)</td><td>४३</td><td>४३</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <p class="mt-4 text-base text-gray-600">
+                                    *टीप: आदिवासी बहुल <strong>धारणी तालुक्यातील ४३ गावांसाठी</strong> अंमलबजावणी संस्था म्हणून निवड.
+                                </p>
+                             </div>
+                             <div class="md:col-span-1 order-1 md:order-2">
+                                <div class="relative group mb-6 md:mb-0">
+                                    <img src="22.jpg" 
+                                         onerror="this.onerror=null; this.src='https://placehold.co/400x300/e2e8f0/1e293b?text=Swachh+Bharat';" 
+                                         alt="स्वच्छ भारत उपक्रम" 
+                                         class="programme-img">
+                                    <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" 
+                                            class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" 
+                                            title="View Full Image">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Other Initiatives (Marathi) -->
+                    <div class="bg-white p-8 rounded-xl card-shadow border-l-8 border-primary">
+                        <h3 class="text-2xl font-bold mb-3 text-primary">इतर प्रमुख उपक्रम</h3>
+                         <div class="grid md:grid-cols-2 gap-8">
+                            <div class="space-y-4">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 mt-1">
+                                        <div class="w-2 h-2 rounded-full bg-primary"></div>
+                                    </div>
+                                    <div class="ml-3">
+                                        <h5 class="text-lg font-bold text-gray-800">गाळमुक्त धरण आणि शिवार</h5>
+                                        <p class="text-base text-gray-600">माजरी म्हसला गाव (नांदगाव खंडेश्वर तालुका). गाळ काढल्यामुळे पाणीसाठा वाढला आणि जमिनीची सुपीकता सुधारली.</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 mt-1">
+                                        <div class="w-2 h-2 rounded-full bg-primary"></div>
+                                    </div>
+                                    <div class="ml-3">
+                                        <h5 class="text-lg font-bold text-gray-800">महिला बचत गट</h5>
+                                        <p class="text-base text-gray-600">अमरावती आणि तिवासा येथे आर्थिक शौचालयांसाठी उत्पादन केंद्रे स्थापन.</p>
+                                    </div>
+                                </div>
+                            </div>
+                             <div class="space-y-4">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 mt-1">
+                                        <div class="w-2 h-2 rounded-full bg-primary"></div>
+                                    </div>
+                                    <div class="ml-3">
+                                        <h5 class="text-lg font-bold text-gray-800">वृक्षारोपण</h5>
+                                        <p class="text-base text-gray-600">अमरावती ते नागपूर महामार्गावरील ४० किमी परिसरात ३ वर्षांचा वृक्षारोपण आणि संवर्धन कार्यक्रम.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Media Coverage Section (Marathi) -->
+        <section class="py-12 bg-gray-50 border-t border-gray-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-10">
+                    <h3 class="text-3xl font-bold text-gray-900 mb-2">प्रसारमाध्यम वृत्तांकन</h3>
+                    <p class="text-lg text-primary font-medium">स्थानिक बातम्यांमधून आमच्या कामाची दखल.</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- News Item 1 -->
+                    <div class="bg-white p-4 rounded-xl card-shadow">
+                        <div class="relative group">
+                            <img src="17.jpg" 
+                                 onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=बातम्या+१';" 
+                                 alt="बातम्या: जल संवर्धन यश" 
+                                 class="news-img">
+                            <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" 
+                                    class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" 
+                                    title="पूर्ण प्रतिमा पहा">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                                </svg>
+                            </button>
+                        </div>
+                        <p class="text-center text-gray-700 font-medium mt-3">जल संवर्धन प्रयत्नांची दखल</p>
+                    </div>
+                    
+                    <!-- News Item 2 -->
+                    <div class="bg-white p-4 rounded-xl card-shadow">
+                        <div class="relative group">
+                            <img src="tree2.jpg" 
+                                 onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=बातम्या+२';" 
+                                 alt="बातम्या: आरोग्य शिबीर यश" 
+                                 class="news-img">
+                            <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" 
+                                    class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" 
+                                    title="पूर्ण प्रतिमा पहा">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                                </svg>
+                            </button>
+                        </div>
+                        <p class="text-center text-gray-700 font-medium mt-3">सार्वजनिक सहभागातून पर्यावरण संवर्धनाला चालना देणे</p>
+                    </div>
+
+                    <!-- News Item 3 -->
+                    <div class="bg-white p-4 rounded-xl card-shadow">
+                        <div class="relative group">
+                            <img src="16.jpg" 
+                                 onerror="this.onerror=null; this.src='https://placehold.co/400x500/e2e8f0/1e293b?text=बातम्या+३';" 
+                                 alt="बातम्या: महिला सक्षमीकरण" 
+                                 class="news-img">
+                            <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" 
+                                    class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" 
+                                    title="पूर्ण प्रतिमा पहा">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                                </svg>
+                            </button>
+                        </div>
+                        <p class="text-center text-gray-700 font-medium mt-3">ग्रामीण अर्थव्यवस्थेत महिलांचा वाटा</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!-- End Hidden container for Marathi content -->
+
+    <!-- Image Modal Structure -->
+    <div id="image-modal" class="fixed inset-0 z-[60] hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <!-- Background overlay -->
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" onclick="closeImageModal()"></div>
+
+            <!-- This element is to trick the browser into centering the modal contents. -->
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
+                    <button type="button" class="absolute top-2 right-2 text-gray-400 hover:text-gray-500 text-3xl font-bold focus:outline-none" onclick="closeImageModal()">
+                        &times;
+                    </button>
+                    <div class="mt-3 text-center sm:mt-0 sm:text-left">
+                        <img id="modal-image" src="" alt="Full View" class="w-full h-auto rounded-md object-contain max-h-[80vh]">
+                        <p id="modal-caption" class="mt-2 text-sm text-gray-500 text-center font-medium"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <!-- NGO Info -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-primary">Maharashtra Gram Darpan</h3>
+                    <p class="text-sm text-gray-400">Committed to creating a strong and independent society without inequalities and discrimination.</p>
+                </div>
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white transition duration-150">Home</a></li>
+                        <li><a href="about-us.html" class="text-gray-400 hover:text-white transition duration-150">About Us</a></li>
+                        <li><a href="our-work.html" class="text-gray-400 hover:text-white transition duration-150">Our Work</a></li>
+                        <li><a href="programmes.html" class="text-gray-400 hover:text-white transition duration-150">Programmes</a></li>
+                        <li><a href="trustees-board.html" class="text-gray-400 hover:text-white transition duration-150">Leadership</a></li>
+                        <li><a href="contact.html" class="text-gray-400 hover:text-white transition duration-150">Contact</a></li>
+                    </ul>
+                </div>
+                <!-- Contact -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Contact</h3>
+                    <p class="text-sm text-gray-400">Amravati-444601, MH</p>
+                    <p class="text-sm text-gray-400">Mob: 9373471897</p>
+                    <!-- UPDATED: Added whitespace-nowrap to keep email in one line -->
+                    <p class="text-sm text-gray-400 whitespace-nowrap">Email: maharashtragramdarpan@gmail.com</p>
+                </div>
+                <!-- Social & Legal -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Legal</h3>
+                    <p class="text-sm text-gray-400">FCRA No: 083740062</p>
+                    <p class="text-sm text-gray-400">80G Certified</p>
+                    <p class="text-sm text-gray-400">ISO 9000:2015</p>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-8 border-t border-gray-700 text-center">
+                <p class="text-sm text-gray-400">&copy; 2025 Maharashtra Gram Darpan. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- IMAGE MODAL LOGIC ---
+        function openImageModal(src, alt) {
+            const modal = document.getElementById('image-modal');
+            const modalImg = document.getElementById('modal-image');
+            const modalCaption = document.getElementById('modal-caption');
+
+            modalImg.src = src;
+            modalCaption.textContent = alt || 'Programme Image';
+            
+            modal.classList.remove('hidden');
+            // Disable body scroll when modal is open
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeImageModal() {
+            const modal = document.getElementById('image-modal');
+            modal.classList.add('hidden');
+            // Re-enable body scroll
+            document.body.style.overflow = 'auto';
+        }
+        
+        // --- LANGUAGE TRANSLATION LOGIC (Simplified to toggle embedded content) ---
+        const MAIN_CONTENT_ID = 'main-content-area';
+        const MARATHI_CONTENT_ID = 'marathi-content-area';
+        const LANG_TOGGLE_KEY = 'mgd_current_lang';
+
+        let currentLanguage = localStorage.getItem(LANG_TOGGLE_KEY) || 'EN';
+        let mainContentArea = document.getElementById(MAIN_CONTENT_ID);
+        let marathiContentArea = document.getElementById(MARATHI_CONTENT_ID);
+        let buttonTextElement = document.getElementById('lang-toggle-button');
+        let mobileButtonTextElement = document.getElementById('mobile-lang-text');
+
+        /**
+         * Toggles the website language between English (EN) and Marathi (MR).
+         */
+        function toggleLanguage() {
+            if (!mainContentArea || !marathiContentArea) return;
+            
+            if (currentLanguage === 'EN') {
+                // Switch to Marathi
+                mainContentArea.style.display = 'none';
+                marathiContentArea.style.display = 'block';
+                currentLanguage = 'MR';
+            } else {
+                // Switch to English
+                mainContentArea.style.display = 'block';
+                marathiContentArea.style.display = 'none';
+                currentLanguage = 'EN';
+            }
+
+            // Update UI elements
+            if (currentLanguage === 'MR') {
+                if(buttonTextElement) buttonTextElement.textContent = 'English (EN)';
+                if(mobileButtonTextElement) mobileButtonTextElement.textContent = 'English (EN)';
+            } else {
+                if(buttonTextElement) buttonTextElement.textContent = 'मराठी (MR)';
+                if(mobileButtonTextElement) mobileButtonTextElement.textContent = 'मराठी (MR)';
+            }
+
+            localStorage.setItem(LANG_TOGGLE_KEY, currentLanguage);
+        }
+
+        /**
+         * Initializes translation state on load.
+         */
+        function initializeTranslationState() {
+            if (!mainContentArea || !marathiContentArea) return;
+
+            // Apply stored language state
+            if (currentLanguage === 'MR') {
+                mainContentArea.style.display = 'none';
+                marathiContentArea.style.display = 'block';
+                if(buttonTextElement) buttonTextElement.textContent = 'English (EN)';
+                if(mobileButtonTextElement) mobileButtonTextElement.textContent = 'English (EN)';
+            } else {
+                mainContentArea.style.display = 'block';
+                marathiContentArea.style.display = 'none';
+                if(buttonTextElement) buttonTextElement.textContent = 'मराठी (MR)';
+                if(mobileButtonTextElement) mobileButtonTextElement.textContent = 'मराठी (MR)';
+            }
+        }
+
+        window.onload = initializeTranslationState;
+
+        // JavaScript for mobile menu toggle (kept original functionality)
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>

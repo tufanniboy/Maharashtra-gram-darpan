@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Maharashtra Gram Darpan</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles based on the logo (Slightly Lighter Dark Green and Red theme) */
+        :root {
+            --color-primary: #065F46; /* Lighter Forest Green */
+            --color-secondary: #B91C1C; /* Brick Red */
+            --color-background: #F4F8F5; 
+            --color-text: #1F2937; /* Dark Gray */
+            --color-alt-row: #F7FDF7;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-background); 
+            color: var(--color-text);
+        }
+        header { background-color: white; }
+        .text-primary { color: var(--color-primary); }
+        .bg-primary { background-color: var(--color-primary); }
+
+        /* Custom shadow for cards */
+        .card-shadow {
+            box-shadow: 0 10px 15px -3px rgba(6, 95, 70, 0.1), 0 4px 6px -2px rgba(6, 95, 70, 0.05);
+            transition: transform 0.3s ease;
+        }
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: white;
+            padding: 0.5rem 1rem; 
+            border-radius: 9999px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            font-size: 1rem; 
+            line-height: 1.5; 
+            display: inline-flex; 
+            align-items: center; 
+        }
+        .btn-primary:hover {
+            background-color: #044F36;
+        }
+
+        /* Form Input Styling */
+        input, textarea {
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(6, 95, 70, 0.2);
+        }
+        
+        /* Loading spinner CSS (Matching index.html) */
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid white;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Navigation -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20 gap-4">
+                <!-- Logo/Site Name - Aligned and Responsive -->
+                <div class="flex-shrink-0 flex items-center"> 
+                    <a href="index.html" class="flex items-center space-x-3">
+                        <!-- Updated Logo Shape: rounded-md and object-cover to match index.html -->
+                        <img src="IMG-20251214-WA0002.jpg" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/64x64/9CA3AF/ffffff?text=LOGO';" 
+                             alt="Maharashtra Gram Darpan Logo" 
+                             class="w-12 h-12 lg:w-16 lg:h-16 rounded-md flex items-center justify-center font-bold text-xl object-cover">
+                        <span class="text-xl lg:text-xl xl:text-2xl font-extrabold text-primary leading-tight">Maharashtra Gram Darpan</span>
+                    </a>
+                </div>
+
+                <!-- Navigation Menu (Desktop) - Hidden on mobile/tablet (lg), Flex on lg+ -->
+                <nav class="hidden lg:flex space-x-6 xl:space-x-12 items-center">
+                    <a href="index.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Home</a>
+                    <a href="about-us.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">About Us</a>
+                    <a href="our-work.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Our Work</a>
+                    <a href="programmes.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Programmes</a>
+                    <a href="trustees-board.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Trustees/Board</a>
+                    <a href="contact.html" class="text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Contact</a>
+                    <!-- Translation Button -->
+                    <button id="lang-toggle-button" class="btn-primary flex items-center justify-center text-sm xl:text-base px-4 py-2" onclick="toggleLanguage()">
+                        <span id="lang-text">मराठी (MR)</span>
+                        <div id="lang-spinner" class="spinner hidden ml-2"></div>
+                    </button>
+                </nav>
+
+                <!-- Mobile Menu Button - Visible on mobile/tablet, Hidden on lg+ -->
+                <button id="mobile-menu-button" class="lg:hidden p-2 rounded-md text-gray-700 hover:text-primary focus:outline-none transition duration-150 ease-in-out">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu (Hidden by default) -->
+        <div id="mobile-menu" class="hidden lg:hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 shadow-inner bg-gray-50">
+                <a href="index.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Home</a>
+                <a href="about-us.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">About Us</a>
+                <a href="our-work.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Our Work</a>
+                <a href="programmes.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Programmes</a>
+                <a href="trustees-board.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Trustees/Board</a>
+                <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-primary bg-gray-50 hover:bg-gray-100">Contact</a>
+                <button class="block px-3 py-2 rounded-md text-base font-medium text-white bg-primary text-center w-full mt-2" onclick="toggleLanguage()">
+                    <span id="mobile-lang-text">मराठी (MR)</span>
+                    <div id="mobile-lang-spinner" class="spinner hidden ml-2"></div>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content AREA (English Default) -->
+    <main id="main-content-area">
+        <section class="py-16 md:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-2">Get in Touch</h2>
+                    <p class="text-xl text-primary font-semibold max-w-2xl mx-auto">
+                        We'd love to hear from you. Reach out to us for collaborations, inquiries, or support.
+                    </p>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+                    
+                    <!-- Contact Information Column -->
+                    <div class="space-y-8">
+                        <!-- Office Address -->
+                        <div class="bg-white p-8 rounded-xl card-shadow border-l-4 border-primary">
+                            <h3 class="text-2xl font-bold mb-4 text-gray-800">Head Office</h3>
+                            <p class="text-lg text-gray-600 mb-1 font-semibold">Maharashtra Gram Darpan</p>
+                            <p class="text-base text-gray-600 leading-relaxed">
+                                B4, Aadarsh Appartment, Tope Nagar,<br>
+                                Beside Maltekdi,<br>
+                                Amravati - 444601 (Maharashtra), India.
+                            </p>
+                        </div>
+
+                        <!-- Contact Details -->
+                        <div class="bg-white p-8 rounded-xl card-shadow border-l-4 border-secondary">
+                            <h3 class="text-2xl font-bold mb-4 text-gray-800">Contact Details</h3>
+                            <div class="space-y-3 text-base text-gray-600">
+                                <p><span class="font-bold text-gray-800 w-24 inline-block">Mobile:</span> 9373471897 / 9420187377 / 9373141207</p>
+                                <p><span class="font-bold text-gray-800 w-24 inline-block">Fax:</span> (0721) 2677580</p>
+                                <p><span class="font-bold text-gray-800 w-24 inline-block">Email:</span> <a href="mailto:maharashtragramdarpan@gmail.com" class="text-primary hover:underline">maharashtragramdarpan@gmail.com</a></p>
+                            </div>
+                        </div>
+
+                        <!-- Legal Info -->
+                        <div class="bg-white p-8 rounded-xl card-shadow border-l-4 border-primary">
+                            <h3 class="text-2xl font-bold mb-4 text-gray-800">Legal Registration</h3>
+                            <ul class="space-y-2 text-sm text-gray-600">
+                                <li><strong>Reg. No:</strong> MH/7979/Amravati F -7197 (Amt) (Society Registration Act 1860)</li>
+                                <li><strong>Tax Exemptions:</strong> 12AA Certificate (2018) | 80G Certificate (2021)</li>
+                                <li><strong>FCRA No:</strong> 083740062</li>
+                                <li><strong>ISO Cert:</strong> ISO9000:2015</li>
+                                <li><strong>Udhyam No:</strong> MH03E0007388</li>
+                                <li><strong>PAN:</strong> AABTM4891Q | <strong>GST:</strong> 27AABTM4891Q1ZQ</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Contact Form Column -->
+                    <div class="bg-white p-8 rounded-xl card-shadow">
+                        <h3 class="text-2xl font-bold mb-6 text-gray-800">Send us a Message</h3>
+                        <form id="contact-form-en" onsubmit="handleFormSubmit(event, 'en')" class="space-y-6">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                                <input type="text" id="name" name="name" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary">
+                            </div>
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                                <input type="email" id="email" name="email" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary">
+                            </div>
+                            <div>
+                                <label for="subject" class="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+                                <input type="text" id="subject" name="subject" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary">
+                            </div>
+                            <div>
+                                <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                                <textarea id="message" name="message" rows="4" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary"></textarea>
+                            </div>
+                            <button type="submit" class="w-full btn-primary justify-center text-lg py-3">
+                                Send Message
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Hidden container for Marathi content -->
+    <div id="marathi-content-area" style="display: none;">
+        <section class="py-16 md:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-2">संपर्क साधा</h2>
+                    <p class="text-xl text-primary font-semibold max-w-2xl mx-auto">
+                        आम्हाला तुमच्याशी संपर्क साधायला आवडेल. सहकार्य, चौकशी किंवा समर्थनासाठी आमच्याशी संपर्क साधा.
+                    </p>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+                    
+                    <!-- Contact Information Column (Marathi) -->
+                    <div class="space-y-8">
+                        <!-- Office Address -->
+                        <div class="bg-white p-8 rounded-xl card-shadow border-l-4 border-primary">
+                            <h3 class="text-2xl font-bold mb-4 text-gray-800">मुख्य कार्यालय</h3>
+                            <p class="text-lg text-gray-600 mb-1 font-semibold">महाराष्ट्र ग्राम दर्पण</p>
+                            <p class="text-base text-gray-600 leading-relaxed">
+                                बी४, आदर्श अपार्टमेंट, तोपे नगर,<br>
+                                मालटेकडी जवळ,<br>
+                                अमरावती - ४४४६०१ (महाराष्ट्र), भारत.
+                            </p>
+                        </div>
+
+                        <!-- Contact Details -->
+                        <div class="bg-white p-8 rounded-xl card-shadow border-l-4 border-secondary">
+                            <h3 class="text-2xl font-bold mb-4 text-gray-800">संपर्क तपशील</h3>
+                            <div class="space-y-3 text-base text-gray-600">
+                                <p><span class="font-bold text-gray-800 w-24 inline-block">मोबाईल:</span> ९३७३४७१८९७ / ९४२०१८७३७७ / ९३७३१४१२०७</p>
+                                <p><span class="font-bold text-gray-800 w-24 inline-block">फॅक्स:</span> (०७२१) २६७७५८०</p>
+                                <p><span class="font-bold text-gray-800 w-24 inline-block">ईमेल:</span> <a href="mailto:maharashtragramdarpan@gmail.com" class="text-primary hover:underline">maharashtragramdarpan@gmail.com</a></p>
+                            </div>
+                        </div>
+
+                        <!-- Legal Info -->
+                        <div class="bg-white p-8 rounded-xl card-shadow border-l-4 border-primary">
+                            <h3 class="text-2xl font-bold mb-4 text-gray-800">कायदेशीर नोंदणी</h3>
+                            <ul class="space-y-2 text-sm text-gray-600">
+                                <li><strong>नोंदणी क्र.:</strong> MH/7979/Amravati F -7197 (Amt) (सोसायटी नोंदणी अधिनियम १८६०)</li>
+                                <li><strong>कर सवलती:</strong> १२अअ प्रमाणपत्र (२०१८) | ८०जी प्रमाणपत्र (२०२१)</li>
+                                <li><strong>FCRA क्र.:</strong> ०८३७४०२६२</li>
+                                <li><strong>ISO प्रमाणपत्र:</strong> ISO9000:2015</li>
+                                <li><strong>उद्यम क्र.:</strong> MH03E0007388</li>
+                                <li><strong>पॅन:</strong> AABTM4891Q | <strong>जीएसटी:</strong> 27AABTM4891Q1ZQ</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Contact Form Column (Marathi) -->
+                    <div class="bg-white p-8 rounded-xl card-shadow">
+                        <h3 class="text-2xl font-bold mb-6 text-gray-800">संदेश पाठवा</h3>
+                        <form id="contact-form-mr" onsubmit="handleFormSubmit(event, 'mr')" class="space-y-6">
+                            <div>
+                                <label for="name-mr" class="block text-sm font-medium text-gray-700 mb-1">पूर्ण नाव</label>
+                                <input type="text" id="name-mr" name="name" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary">
+                            </div>
+                            <div>
+                                <label for="email-mr" class="block text-sm font-medium text-gray-700 mb-1">ईमेल पत्ता</label>
+                                <input type="email" id="email-mr" name="email" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary">
+                            </div>
+                            <div>
+                                <label for="subject-mr" class="block text-sm font-medium text-gray-700 mb-1">विषय</label>
+                                <input type="text" id="subject-mr" name="subject" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary">
+                            </div>
+                            <div>
+                                <label for="message-mr" class="block text-sm font-medium text-gray-700 mb-1">संदेश</label>
+                                <textarea id="message-mr" name="message" rows="4" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary"></textarea>
+                            </div>
+                            <button type="submit" class="w-full btn-primary justify-center text-lg py-3">
+                                संदेश पाठवा
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </div>
+    <!-- End Hidden container for Marathi content -->
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <!-- NGO Info -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-primary">Maharashtra Gram Darpan</h3>
+                    <p class="text-sm text-gray-400">Committed to creating a strong and independent society without inequalities and discrimination.</p>
+                </div>
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white transition duration-150">Home</a></li>
+                        <li><a href="about-us.html" class="text-gray-400 hover:text-white transition duration-150">About Us</a></li>
+                        <li><a href="our-work.html" class="text-gray-400 hover:text-white transition duration-150">Our Work</a></li>
+                        <li><a href="programmes.html" class="text-gray-400 hover:text-white transition duration-150">Programmes</a></li>
+                        <li><a href="trustees-board.html" class="text-gray-400 hover:text-white transition duration-150">Leadership</a></li>
+                        <li><a href="contact.html" class="text-gray-400 hover:text-white transition duration-150">Contact</a></li>
+                    </ul>
+                </div>
+                <!-- Contact -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Contact</h3>
+                    <p class="text-sm text-gray-400">Amravati-444601, MH</p>
+                    <p class="text-sm text-gray-400">Mob: 9373471897</p>
+                    <!-- UPDATED: Added whitespace-nowrap to keep email in one line -->
+                    <p class="text-sm text-gray-400 whitespace-nowrap">Email: maharashtragramdarpan@gmail.com</p>
+                </div>
+                <!-- Social & Legal -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Legal</h3>
+                    <p class="text-sm text-gray-400">FCRA No: 083740062</p>
+                    <p class="text-sm text-gray-400">80G Certified</p>
+                    <p class="text-sm text-gray-400">ISO 9000:2015</p>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-8 border-t border-gray-700 text-center">
+                <p class="text-sm text-gray-400">&copy; 2025 Maharashtra Gram Darpan. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // --- FORM SUBMISSION LOGIC ---
+        function handleFormSubmit(event, lang) {
+            event.preventDefault(); // Prevent default form submission
+
+            const form = event.target;
+            const name = form.querySelector('input[name="name"]').value;
+            const email = form.querySelector('input[name="email"]').value;
+            const subject = form.querySelector('input[name="subject"]').value;
+            const message = form.querySelector('textarea[name="message"]').value;
+
+            const recipient = "maharashtragramdarpan@gmail.com";
+            const fullSubject = `Website Inquiry: ${subject}`;
+            const body = `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`;
+
+            // Construct mailto link
+            const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(fullSubject)}&body=${encodeURIComponent(body)}`;
+
+            // Open email client
+            window.location.href = mailtoLink;
+        }
+
+        // --- LANGUAGE TRANSLATION LOGIC ---
+        const MAIN_CONTENT_ID = 'main-content-area';
+        const MARATHI_CONTENT_ID = 'marathi-content-area';
+        const LANG_TOGGLE_KEY = 'mgd_current_lang_contact'; // Unique key for this page
+
+        let currentLanguage = localStorage.getItem(LANG_TOGGLE_KEY) || 'EN';
+        let mainContentArea = document.getElementById(MAIN_CONTENT_ID);
+        let marathiContentArea = document.getElementById(MARATHI_CONTENT_ID);
+        let buttonTextElement = document.getElementById('lang-toggle-button');
+        let mobileButtonTextElement = document.getElementById('mobile-lang-text');
+
+        /**
+         * Toggles the website language between English (EN) and Marathi (MR).
+         */
+        function toggleLanguage() {
+            if (!mainContentArea || !marathiContentArea) return;
+            
+            if (currentLanguage === 'EN') {
+                // Switch to Marathi
+                mainContentArea.style.display = 'none';
+                marathiContentArea.style.display = 'block';
+                currentLanguage = 'MR';
+            } else {
+                // Switch to English
+                mainContentArea.style.display = 'block';
+                marathiContentArea.style.display = 'none';
+                currentLanguage = 'EN';
+            }
+
+            // Update UI elements
+            if (currentLanguage === 'MR') {
+                if(buttonTextElement) buttonTextElement.textContent = 'English (EN)';
+                if(mobileButtonTextElement) mobileButtonTextElement.textContent = 'English (EN)';
+            } else {
+                if(buttonTextElement) buttonTextElement.textContent = 'मराठी (MR)';
+                if(mobileButtonTextElement) mobileButtonTextElement.textContent = 'मराठी (MR)';
+            }
+
+            localStorage.setItem(LANG_TOGGLE_KEY, currentLanguage);
+        }
+
+        /**
+         * Initializes translation state on load.
+         */
+        function initializeTranslationState() {
+            if (!mainContentArea || !marathiContentArea) return;
+
+            // Apply stored language state
+            if (currentLanguage === 'MR') {
+                mainContentArea.style.display = 'none';
+                marathiContentArea.style.display = 'block';
+                if(buttonTextElement) buttonTextElement.textContent = 'English (EN)';
+                if(mobileButtonTextElement) mobileButtonTextElement.textContent = 'English (EN)';
+            } else {
+                mainContentArea.style.display = 'block';
+                marathiContentArea.style.display = 'none';
+                if(buttonTextElement) buttonTextElement.textContent = 'मराठी (MR)';
+                if(mobileButtonTextElement) mobileButtonTextElement.textContent = 'मराठी (MR)';
+            }
+        }
+
+        window.onload = initializeTranslationState;
+
+        // JavaScript for mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>

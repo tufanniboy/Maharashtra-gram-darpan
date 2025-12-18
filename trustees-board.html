@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trustees/Board - Maharashtra Gram Darpan</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles based on the logo (Slightly Lighter Dark Green and Red theme) */
+        :root {
+            --color-primary: #065F46; /* Lighter Forest Green */
+            --color-secondary: #B91C1C; /* Brick Red */
+            --color-background: #F4F8F5; 
+            --color-text: #1F2937; /* Dark Gray */
+            --color-alt-row: #F7FDF7;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-background); 
+            color: var(--color-text);
+        }
+        header { background-color: white; }
+        .text-primary { color: var(--color-primary); }
+        .bg-primary { background-color: var(--color-primary); }
+
+        /* Custom shadow for cards */
+        .card-shadow {
+            box-shadow: 0 10px 15px -3px rgba(6, 95, 70, 0.1), 0 4px 6px -2px rgba(6, 95, 70, 0.05);
+            transition: transform 0.3s ease;
+        }
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: white;
+            padding: 0.5rem 1rem; 
+            border-radius: 9999px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            font-size: 1rem; 
+            line-height: 1.5; 
+            display: inline-flex; 
+            align-items: center; 
+        }
+        .btn-primary:hover {
+            background-color: #044F36;
+        }
+
+        /* Profile Image Style */
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--color-primary);
+            margin: 0 auto 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Loading spinner CSS (Matching index.html) */
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid white;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Navigation -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20 gap-4">
+                <!-- Logo/Site Name - Aligned and Responsive -->
+                <div class="flex-shrink-0 flex items-center"> 
+                    <a href="index.html" class="flex items-center space-x-3">
+                        <img src="IMG-20251214-WA0002.jpg" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/64x64/9CA3AF/ffffff?text=LOGO';" 
+                             alt="Maharashtra Gram Darpan Logo" 
+                             class="w-12 h-12 lg:w-16 lg:h-16 rounded-md flex items-center justify-center font-bold text-xl object-cover">
+                        <span class="text-xl lg:text-xl xl:text-2xl font-extrabold text-primary leading-tight">Maharashtra Gram Darpan</span>
+                    </a>
+                </div>
+
+                <!-- Navigation Menu (Desktop) -->
+                <nav class="hidden lg:flex space-x-6 xl:space-x-12 items-center">
+                    <a href="index.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Home</a>
+                    <a href="about-us.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">About Us</a>
+                    <a href="our-work.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Our Work</a>
+                    <a href="programmes.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Programmes</a>
+                    <a href="trustees-board.html" class="text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Trustees/Board</a>
+                    <a href="contact.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Contact</a>
+                    <!-- Translation Button -->
+                    <button id="lang-toggle-button" class="btn-primary flex items-center justify-center text-sm xl:text-base px-4 py-2" onclick="toggleLanguage()">
+                        <span id="lang-text">मराठी (MR)</span>
+                        <div id="lang-spinner" class="spinner hidden ml-2"></div>
+                    </button>
+                </nav>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-button" class="lg:hidden p-2 rounded-md text-gray-700 hover:text-primary focus:outline-none transition duration-150 ease-in-out">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden lg:hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 shadow-inner bg-gray-50">
+                <a href="index.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Home</a>
+                <a href="about-us.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">About Us</a>
+                <a href="our-work.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Our Work</a>
+                <a href="programmes.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Programmes</a>
+                <a href="trustees-board.html" class="block px-3 py-2 rounded-md text-base font-medium text-primary bg-gray-50 hover:bg-gray-100">Trustees/Board</a>
+                <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Contact</a>
+                <button class="block px-3 py-2 rounded-md text-base font-medium text-white bg-primary text-center w-full mt-2" onclick="toggleLanguage()">
+                    <span id="mobile-lang-text">मराठी (MR)</span>
+                    <div id="mobile-lang-spinner" class="spinner hidden ml-2"></div>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content AREA (English Default) -->
+    <main id="main-content-area">
+        <section class="py-16 md:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h2 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4">Governing Body & Leadership</h2>
+                <p class="text-xl text-primary font-semibold max-w-2xl mx-auto mb-16">
+                    Our leadership team brings expertise, passion, and a deep commitment to drive our mission forward.
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+                    <!-- Founder -->
+                    <div class="p-8 bg-white rounded-xl card-shadow text-center transform transition duration-300 hover:scale-105">
+                        <img src="aatya.jpg" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/150x150/065F46/ffffff?text=Founder';" 
+                             alt="Dr. Megha Pramod Raut" 
+                             class="profile-img">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-1">Dr. Megha Pramod Raut</h3>
+                        <p class="text-lg text-primary font-semibold mb-4">Founder</p>
+                        <p class="text-gray-600 text-base leading-relaxed">
+                            The visionary behind Maharashtra Gram Darpan, Dr. Raut established the institute with a mission to foster strong, independent, and equitable rural communities. Her leadership continues to inspire our initiatives towards social equality and empowerment.
+                        </p>
+                    </div>
+
+                    <!-- Chief Functionary -->
+                    <div class="p-8 bg-white rounded-xl card-shadow text-center transform transition duration-300 hover:scale-105">
+                        <img src="baba1.jpg" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/150x150/065F46/ffffff?text=Chief';" 
+                             alt="Mr. Ravindra Himmatrao Deshmukh" 
+                             class="profile-img">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-1">Mr. Ravindra Himmatrao Deshmukh</h3>
+                        <p class="text-lg text-primary font-semibold mb-1">Chief Functionary</p>
+                        <p class="text-sm text-gray-500 mb-4 font-medium">Engineer (Electrical)</p>
+                        <p class="text-gray-600 text-base leading-relaxed">
+                            An experienced Electrical Engineer, Mr. Deshmukh leads the operational aspects of the organization. He ensures technical soundness, efficient implementation, and strategic direction for all our rural development programmes.
+                        </p>
+                    </div>
+
+                    <!-- CEO -->
+                    <div class="p-8 bg-white rounded-xl card-shadow text-center transform transition duration-300 hover:scale-105">
+                        <img src="ceo.jpg" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/150x150/065F46/ffffff?text=CEO';" 
+                             alt="Mr. Suhbod Deshmukh" 
+                             class="profile-img">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-1">Mr. Suhbod Deshmukh</h3>
+                        <p class="text-lg text-primary font-semibold mb-4">CEO</p>
+                        <p class="text-gray-600 text-base leading-relaxed">
+                            Leading our organizational strategy and execution, Mr. Suhbod Deshmukh oversees the day-to-day management and ensuring our programmes reach their maximum potential.
+                        </p>
+                    </div>
+
+                    <!-- Treasurer -->
+                    <div class="p-8 bg-white rounded-xl card-shadow text-center transform transition duration-300 hover:scale-105">
+                        <img src="aai.jpeg" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/150x150/065F46/ffffff?text=Treasurer';" 
+                             alt="Mrs. Gayatri Ravindra Deshmukh" 
+                             class="profile-img">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-1">Mrs. Gayatri Ravindra Deshmukh</h3>
+                        <p class="text-lg text-primary font-semibold mb-4">Treasurer</p>
+                        <p class="text-gray-600 text-base leading-relaxed">
+                            Ensuring financial integrity and transparency, Mrs. Gayatri Deshmukh manages the organization's resources, enabling sustainable growth for our community initiatives.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-16 p-8 bg-white rounded-xl card-shadow max-w-3xl mx-auto border-l-8 border-secondary">
+                    <h4 class="text-2xl font-bold mb-2 text-gray-800">Operational Area</h4>
+                    <p class="text-xl text-primary font-bold mb-2">All India Level</p>
+                    <p class="text-gray-600 text-base">
+                        While deeply rooted in Maharashtra, our mission and operational mandate extend to development and awareness campaigns across all of India.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Hidden container for Marathi content -->
+    <div id="marathi-content-area" style="display: none;">
+        <section class="py-16 md:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h2 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4">प्रशासन मंडळ आणि नेतृत्व</h2>
+                <p class="text-xl text-primary font-semibold max-w-2xl mx-auto mb-16">
+                    आमची नेतृत्व टीम आमच्या ध्येयाला पुढे नेण्यासाठी कौशल्य, उत्साह आणि खोलवर बांधिलकी घेऊन येते.
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+                    <!-- Founder (Marathi) -->
+                    <div class="p-8 bg-white rounded-xl card-shadow text-center transform transition duration-300 hover:scale-105">
+                        <img src="aatya.jpg" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/150x150/065F46/ffffff?text=संस्थापक';" 
+                             alt="डॉ. मेघा प्रमोद राऊत" 
+                             class="profile-img">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-1">डॉ. मेघा प्रमोद राऊत</h3>
+                        <p class="text-lg text-primary font-semibold mb-4">संस्थापक</p>
+                        <p class="text-gray-600 text-base leading-relaxed">
+                            महाराष्ट्र ग्राम दर्पणच्या मागे असलेली दूरदृष्टी, डॉ. राऊत यांनी मजबूत, स्वतंत्र आणि न्याय्य ग्रामीण समुदाय वाढवण्यासाठी संस्थेची स्थापना केली. त्यांचे नेतृत्व सामाजिक समता आणि सक्षमीकरणाच्या आमच्या उपक्रमांना सतत प्रेरणा देत आहे.
+                        </p>
+                    </div>
+
+                    <!-- Chief Functionary (Marathi) -->
+                    <div class="p-8 bg-white rounded-xl card-shadow text-center transform transition duration-300 hover:scale-105">
+                        <img src="baba1.jpg" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/150x150/065F46/ffffff?text=मुख्य';" 
+                             alt="श्री. रवींद्र हिंमतराव देशमुख" 
+                             class="profile-img">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-1">श्री. रवींद्र हिंमतराव देशमुख</h3>
+                        <p class="text-lg text-primary font-semibold mb-1">मुख्य कार्यकारी अधिकारी</p>
+                        <p class="text-sm text-gray-500 mb-4 font-medium">इंजिनियर (इलेक्ट्रिकल)</p>
+                        <p class="text-gray-600 text-base leading-relaxed">
+                            एक अनुभवी इलेक्ट्रिकल इंजिनियर, श्री. देशमुख संस्थेच्या कार्यात्मक बाबींचे नेतृत्व करतात. ते आमच्या सर्व ग्रामीण विकास कार्यक्रमांसाठी तांत्रिक अचूकता, कार्यक्षम अंमलबजावणी आणि धोरणात्मक दिशा सुनिश्चित करतात.
+                        </p>
+                    </div>
+
+                    <!-- CEO (Marathi) -->
+                    <div class="p-8 bg-white rounded-xl card-shadow text-center transform transition duration-300 hover:scale-105">
+                        <img src="ceo.jpg" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/150x150/065F46/ffffff?text=CEO';" 
+                             alt="श्री. सुबोध देशमुख" 
+                             class="profile-img">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-1">श्री. सुबोध देशमुख</h3>
+                        <p class="text-lg text-primary font-semibold mb-4">सी.ई.ओ.</p>
+                        <p class="text-gray-600 text-base leading-relaxed">
+                            आमच्या संस्थात्मक धोरणाचे आणि अंमलबजावणीचे नेतृत्व करत, श्री. सुबोध देशमुख दैनंदिन व्यवस्थापनावर देखरेख करतात आणि आमचे कार्यक्रम त्यांच्या पूर्ण क्षमतेपर्यंत पोहोचतील याची खात्री करतात.
+                        </p>
+                    </div>
+
+                    <!-- Treasurer (Marathi) -->
+                    <div class="p-8 bg-white rounded-xl card-shadow text-center transform transition duration-300 hover:scale-105">
+                        <img src="aai.jpeg" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/150x150/065F46/ffffff?text=कोषाध्यक्ष';" 
+                             alt="सौ. गायत्री रवींद्र देशमुख" 
+                             class="profile-img">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-1">सौ. गायत्री रवींद्र देशमुख</h3>
+                        <p class="text-lg text-primary font-semibold mb-4">कोषाध्यक्ष</p>
+                        <p class="text-gray-600 text-base leading-relaxed">
+                            आर्थिक अखंडता आणि पारदर्शकता सुनिश्चित करत, सौ. गायत्री देशमुख संस्थेच्या संसाधनांचे व्यवस्थापन करतात, ज्यामुळे आमच्या समुदाय उपक्रमांसाठी शाश्वत वाढ शक्य होते.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-16 p-8 bg-white rounded-xl card-shadow max-w-3xl mx-auto border-l-8 border-secondary">
+                    <h4 class="text-2xl font-bold mb-2 text-gray-800">कार्यक्षेत्र</h4>
+                    <p class="text-xl text-primary font-bold mb-2">अखिल भारतीय स्तर</p>
+                    <p class="text-gray-600 text-base">
+                        महाराष्ट्रात खोलवर रुजलेले असले तरी, आमचे ध्येय आणि कार्यात्मक आदेश संपूर्ण भारतातील विकास आणि जागरूकता मोहिमांपर्यंत विस्तारलेले आहे.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!-- End Hidden container for Marathi content -->
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <!-- NGO Info -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-primary">Maharashtra Gram Darpan</h3>
+                    <p class="text-sm text-gray-400">Committed to creating a strong and independent society without inequalities and discrimination.</p>
+                </div>
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white transition duration-150">Home</a></li>
+                        <li><a href="about-us.html" class="text-gray-400 hover:text-white transition duration-150">About Us</a></li>
+                        <li><a href="our-work.html" class="text-gray-400 hover:text-white transition duration-150">Our Work</a></li>
+                        <li><a href="programmes.html" class="text-gray-400 hover:text-white transition duration-150">Programmes</a></li>
+                        <li><a href="trustees-board.html" class="text-gray-400 hover:text-white transition duration-150">Leadership</a></li>
+                        <li><a href="contact.html" class="text-gray-400 hover:text-white transition duration-150">Contact</a></li>
+                    </ul>
+                </div>
+                <!-- Contact -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Contact</h3>
+                    <p class="text-sm text-gray-400">Amravati-444601, MH</p>
+                    <p class="text-sm text-gray-400">Mob: 9373471897</p>
+                    <p class="text-sm text-gray-400 whitespace-nowrap">Email: maharashtragramdarpan@gmail.com</p>
+                </div>
+                <!-- Social & Legal -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Legal</h3>
+                    <p class="text-sm text-gray-400">FCRA No: 083740062</p>
+                    <p class="text-sm text-gray-400">80G Certified</p>
+                    <p class="text-sm text-gray-400">ISO 9000:2015</p>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-8 border-t border-gray-700 text-center">
+                <p class="text-sm text-gray-400">&copy; 2025 Maharashtra Gram Darpan. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // --- LANGUAGE TRANSLATION LOGIC ---
+        const MAIN_CONTENT_ID = 'main-content-area';
+        const MARATHI_CONTENT_ID = 'marathi-content-area';
+        const LANG_TOGGLE_KEY = 'mgd_current_lang_trustees'; // Unique key for this page
+
+        let currentLanguage = localStorage.getItem(LANG_TOGGLE_KEY) || 'EN';
+        let mainContentArea = document.getElementById(MAIN_CONTENT_ID);
+        let marathiContentArea = document.getElementById(MARATHI_CONTENT_ID);
+        let buttonTextElement = document.getElementById('lang-toggle-button');
+        let mobileButtonTextElement = document.getElementById('mobile-lang-text');
+
+        /**
+         * Toggles the website language between English (EN) and Marathi (MR).
+         */
+        function toggleLanguage() {
+            if (!mainContentArea || !marathiContentArea) return;
+            
+            if (currentLanguage === 'EN') {
+                // Switch to Marathi
+                mainContentArea.style.display = 'none';
+                marathiContentArea.style.display = 'block';
+                currentLanguage = 'MR';
+            } else {
+                // Switch to English
+                mainContentArea.style.display = 'block';
+                marathiContentArea.style.display = 'none';
+                currentLanguage = 'EN';
+            }
+
+            // Update UI elements
+            if (currentLanguage === 'MR') {
+                if(buttonTextElement) buttonTextElement.textContent = 'English (EN)';
+                if(mobileButtonTextElement) mobileButtonTextElement.textContent = 'English (EN)';
+            } else {
+                if(buttonTextElement) buttonTextElement.textContent = 'मराठी (MR)';
+                if(mobileButtonTextElement) mobileButtonTextElement.textContent = 'मराठी (MR)';
+            }
+
+            localStorage.setItem(LANG_TOGGLE_KEY, currentLanguage);
+        }
+
+        /**
+         * Initializes translation state on load.
+         */
+        function initializeTranslationState() {
+            if (!mainContentArea || !marathiContentArea) return;
+
+            // Apply stored language state
+            if (currentLanguage === 'MR') {
+                mainContentArea.style.display = 'none';
+                marathiContentArea.style.display = 'block';
+                if(buttonTextElement) buttonTextElement.textContent = 'English (EN)';
+                if(mobileButtonTextElement) mobileButtonTextElement.textContent = 'English (EN)';
+            } else {
+                mainContentArea.style.display = 'block';
+                marathiContentArea.style.display = 'none';
+                if(buttonTextElement) buttonTextElement.textContent = 'मराठी (MR)';
+                if(mobileButtonTextElement) mobileButtonTextElement.textContent = 'मराठी (MR)';
+            }
+        }
+
+        window.onload = initializeTranslationState;
+
+        // JavaScript for mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>

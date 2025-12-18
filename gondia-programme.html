@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gondia Programme - Maharashtra Gram Darpan</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles based on the logo (Slightly Lighter Dark Green and Red theme) */
+        :root {
+            --color-primary: #065F46; /* Lighter Forest Green */
+            --color-secondary: #B91C1C; /* Brick Red */
+            --color-background: #F4F8F5; 
+            --color-text: #1F2937; /* Dark Gray */
+            --color-alt-row: #F7FDF7;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-background); 
+            color: var(--color-text);
+        }
+        header { background-color: white; }
+        .text-primary { color: var(--color-primary); }
+        .bg-primary { background-color: var(--color-primary); }
+
+        /* Custom shadow for cards */
+        .card-shadow {
+            box-shadow: 0 10px 15px -3px rgba(6, 95, 70, 0.1), 0 4px 6px -2px rgba(6, 95, 70, 0.05);
+            transition: transform 0.3s ease;
+        }
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: white;
+            padding: 0.5rem 1rem; 
+            border-radius: 9999px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            font-size: 1rem; 
+            line-height: 1.5; 
+            display: inline-flex; 
+            align-items: center; 
+        }
+        .btn-primary:hover {
+            background-color: #044F36;
+        }
+
+        /* Responsive table styling */
+        .responsive-table-container {
+            overflow-x: auto;
+            max-width: 100%;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+        .data-table th, .data-table td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid #E5E7EB;
+        }
+        .data-table th {
+            background-color: #ECFDF5;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+        .data-table tbody tr:nth-child(odd) {
+            background-color: #FFFFFF;
+        }
+        .data-table tbody tr:nth-child(even) {
+            background-color: var(--color-alt-row);
+        }
+
+        /* Programme Image Styling */
+        .programme-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+            /* margin-bottom removed here, handled by wrapper */
+            border: 1px solid #e5e7eb;
+        }
+        
+        /* News Image Styling - Taller aspect ratio for papers */
+        .news-img {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            object-position: top;
+            border-radius: 0.5rem;
+            border: 1px solid #e5e7eb;
+        }
+
+        /* Loading spinner CSS (Matching index.html) */
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid white;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Navigation -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20 gap-4">
+                <!-- Logo/Site Name - Aligned and Responsive -->
+                <div class="flex-shrink-0 flex items-center"> 
+                    <a href="index.html" class="flex items-center space-x-3">
+                        <!-- Updated Logo Shape: rounded-md (square with slight radius) and object-cover to match index.html -->
+                        <img src="IMG-20251214-WA0002.jpg" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/64x64/9CA3AF/ffffff?text=LOGO';" 
+                             alt="Maharashtra Gram Darpan Logo" 
+                             class="w-12 h-12 lg:w-16 lg:h-16 rounded-md flex items-center justify-center font-bold text-xl object-cover">
+                        <span class="text-xl lg:text-xl xl:text-2xl font-extrabold text-primary leading-tight">Maharashtra Gram Darpan</span>
+                    </a>
+                </div>
+
+                <!-- Navigation Menu (Desktop) - Hidden on mobile/tablet (lg), Flex on lg+ -->
+                <nav class="hidden lg:flex space-x-6 xl:space-x-12 items-center">
+                    <a href="index.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Home</a>
+                    <a href="about-us.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">About Us</a>
+                    <a href="our-work.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Our Work</a>
+                    <a href="programmes.html" class="text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Programmes</a>
+                    <a href="trustees-board.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Trustees/Board</a>
+                    <a href="contact.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Contact</a>
+                    <!-- Translation Button -->
+                    <button id="lang-toggle-button" class="btn-primary flex items-center justify-center text-sm xl:text-base px-4 py-2" onclick="toggleLanguage()">
+                        <span id="lang-text">मराठी (MR)</span>
+                        <div id="lang-spinner" class="spinner hidden ml-2"></div>
+                    </button>
+                </nav>
+
+                <!-- Mobile Menu Button - Visible on mobile/tablet, Hidden on lg+ -->
+                <button id="mobile-menu-button" class="lg:hidden p-2 rounded-md text-gray-700 hover:text-primary focus:outline-none transition duration-150 ease-in-out">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu (Hidden by default) -->
+        <div id="mobile-menu" class="hidden lg:hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 shadow-inner bg-gray-50">
+                <a href="index.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Home</a>
+                <a href="about-us.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">About Us</a>
+                <a href="our-work.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Our Work</a>
+                <a href="programmes.html" class="block px-3 py-2 rounded-md text-base font-medium text-primary bg-gray-50 hover:bg-gray-100">Programmes</a>
+                <a href="trustees-board.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Trustees/Board</a>
+                <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Contact</a>
+                <button class="block px-3 py-2 rounded-md text-base font-medium text-white bg-primary text-center w-full mt-2" onclick="toggleLanguage()">
+                    <span id="mobile-lang-text">मराठी (MR)</span>
+                    <div id="mobile-lang-spinner" class="spinner hidden ml-2"></div>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content AREA (English Default) -->
+    <main id="main-content-area">
+        <section class="py-16 md:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-2">Gondia Programme</h2>
+                    <p class="text-xl text-primary font-semibold max-w-4xl mx-auto">
+                        Water, Sanitation, and Community Development in Gondia District
+                    </p>
+                </div>
+
+                <div class="space-y-12 text-sm text-gray-700">
+                    
+                    <!-- Jal-Jivan Mission Overview -->
+                    <div class="bg-white p-8 rounded-xl card-shadow border-l-8 border-primary">
+                        <div class="grid md:grid-cols-3 gap-8">
+                            <!-- Image Column -->
+                            <div class="md:col-span-1">
+                                <div class="relative group mb-6 md:mb-0">
+                                    <img src="21.jpg" 
+                                         onerror="this.onerror=null; this.src='https://placehold.co/400x300/e2e8f0/1e293b?text=Jal-Jivan+Gondia';" 
+                                         alt="Jal-Jivan Mission Gondia" 
+                                         class="programme-img">
+                                    <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" 
+                                            class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" 
+                                            title="View Full Image">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Content Column -->
+                            <div class="md:col-span-2">
+                                <h3 class="text-2xl font-bold mb-3 text-primary">Jal-Jivan Mission Initiatives</h3>
+                                <p class="text-lg mb-4">
+                                    In Gondia district, MGD is actively implementing the Jal-Jivan initiative. We are focusing on training and capacity building to ensure sustainable water management and sanitation practices.
+                                </p>
+                                <p class="text-lg mb-4">
+                                    Our target group includes <strong>2735 village members</strong> across <strong>867 villages</strong> in <strong>8 talukas</strong> of the district.
+                                </p>
+                                
+                                <h4 class="text-xl font-semibold mb-2 text-gray-800">Training Progress Report:</h4>
+                                <div class="responsive-table-container">
+                                    <table class="data-table mt-4 text-base">
+                                        <thead>
+                                            <tr>
+                                                <th>Year</th>
+                                                <th>Training Program</th>
+                                                <th>Target</th>
+                                                <th>Achievement</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td>2022-23</td><td>Jal-Jivan Orientation Training</td><td>2735</td><td>2735</td></tr>
+                                            <tr><td>2023-24</td><td>Operational, Maintenance & Circulation</td><td>2735</td><td>2735</td></tr>
+                                            <tr><td>-</td><td>Water Quality Training</td><td>1415</td><td>1385</td></tr>
+                                            <tr><td>2024-25</td><td>Water Literacy</td><td>2735</td><td>2670</td></tr>
+                                            <tr><td>-</td><td>Information & Practical Sessions</td><td>867</td><td>577</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Swachh Bharat Mission -->
+                    <div class="bg-white p-8 rounded-xl card-shadow" style="border-left: 8px solid var(--color-secondary);">
+                        <div class="grid md:grid-cols-3 gap-8">
+                             <!-- Content Column (Swapped for variety on desktop) -->
+                             <div class="md:col-span-2 order-2 md:order-1">
+                                <h3 class="text-2xl font-bold mb-3" style="color: var(--color-secondary);">Swachh Bharat Mission</h3>
+                                <p class="text-lg mb-4">
+                                    Under the Swachh Bharat Mission, MGD is working towards comprehensive waste management solutions in the district.
+                                </p>
+                                 <div class="responsive-table-container">
+                                    <table class="data-table mt-4 text-base">
+                                        <thead>
+                                            <tr>
+                                                <th>Year</th>
+                                                <th>Activity Description</th>
+                                                <th>Target</th>
+                                                <th>Achievement</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td>2022-23</td><td>Wastewater and Solid Waste Management</td><td>2735</td><td>2493</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <p class="mt-4 text-base text-gray-600">
+                                    Key activities involve creating awareness about plastic-free villages, converting waste to fertilizer, and reusing polluted water for kitchen gardening.
+                                </p>
+                             </div>
+                             <!-- Image Column -->
+                             <div class="md:col-span-1 order-1 md:order-2">
+                                <div class="relative group mb-6 md:mb-0">
+                                    <img src="22.jpg" 
+                                         onerror="this.onerror=null; this.src='https://placehold.co/400x300/e2e8f0/1e293b?text=Swachh+Bharat+Gondia';" 
+                                         alt="Swachh Bharat Gondia" 
+                                         class="programme-img">
+                                    <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" 
+                                            class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" 
+                                            title="View Full Image">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Hidden container for Marathi content -->
+    <div id="marathi-content-area" style="display: none;">
+        <section class="py-16 md:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-2">गोंदिया कार्यक्रम</h2>
+                    <p class="text-xl text-primary font-semibold max-w-4xl mx-auto">
+                        गोंदिया जिल्ह्यातील पाणी, स्वच्छता आणि समुदाय विकास
+                    </p>
+                </div>
+
+                <div class="space-y-12 text-sm text-gray-700">
+                    
+                    <!-- Jal-Jivan Mission (Marathi) -->
+                    <div class="bg-white p-8 rounded-xl card-shadow border-l-8 border-primary">
+                        <div class="grid md:grid-cols-3 gap-8">
+                            <div class="md:col-span-1">
+                                <div class="relative group mb-6 md:mb-0">
+                                    <img src="21.jpg" 
+                                         onerror="this.onerror=null; this.src='https://placehold.co/400x300/e2e8f0/1e293b?text=Jal-Jivan+Gondia';" 
+                                         alt="जल-जीवन मिशन गोंदिया" 
+                                         class="programme-img">
+                                    <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" 
+                                            class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" 
+                                            title="पूर्ण प्रतिमा पहा">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="md:col-span-2">
+                                <h3 class="text-2xl font-bold mb-3 text-primary">जल-जीवन मिशन उपक्रम</h3>
+                                <p class="text-lg mb-4">
+                                    गोंदिया जिल्ह्यात, MGD जल-जीवन उपक्रम सक्रियपणे राबवत आहे. आम्ही शाश्वत पाणी व्यवस्थापन आणि स्वच्छता पद्धती सुनिश्चित करण्यासाठी प्रशिक्षण आणि क्षमता बांधणीवर लक्ष केंद्रित करत आहोत.
+                                </p>
+                                <p class="text-lg mb-4">
+                                    आमच्या लक्षित गटामध्ये जिल्ह्याच्या <strong>८ तालुक्यातील ८६७ गावांमधील २७३५ ग्रामस्थ</strong> सदस्यांचा समावेश आहे.
+                                </p>
+                                
+                                <h4 class="text-xl font-semibold mb-2 text-gray-800">प्रशिक्षण प्रगती अहवाल:</h4>
+                                <div class="responsive-table-container">
+                                    <table class="data-table mt-4 text-base">
+                                        <thead>
+                                            <tr>
+                                                <th>वर्ष</th>
+                                                <th>प्रशिक्षण कार्यक्रम</th>
+                                                <th>लक्ष्य</th>
+                                                <th>प्राप्ती</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td>२०२२-२३</td><td>जल-जीवन ओरिएंटेशन प्रशिक्षण</td><td>२७३५</td><td>२७३५</td></tr>
+                                            <tr><td>२०२३-२४</td><td>कार्यरत, देखभाल आणि परिभ्रमण</td><td>२७३५</td><td>२७३५</td></tr>
+                                            <tr><td>-</td><td>पाण्याची गुणवत्ता प्रशिक्षण</td><td>१४१५</td><td>१३८५</td></tr>
+                                            <tr><td>२०२४-२५</td><td>जल साक्षरता</td><td>२७३५</td><td>२६७०</td></tr>
+                                            <tr><td>-</td><td>माहिती आणि प्रात्यक्षिक सत्रे</td><td>८६७</td><td>५७७</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Swachh Bharat Mission (Marathi) -->
+                    <div class="bg-white p-8 rounded-xl card-shadow" style="border-left: 8px solid var(--color-secondary);">
+                        <div class="grid md:grid-cols-3 gap-8">
+                             <div class="md:col-span-2 order-2 md:order-1">
+                                <h3 class="text-2xl font-bold mb-3" style="color: var(--color-secondary);">स्वच्छ भारत मिशन</h3>
+                                <p class="text-lg mb-4">
+                                    स्वच्छ भारत मिशन अंतर्गत, MGD जिल्ह्यात सर्वसमावेशक कचरा व्यवस्थापन उपायांवर काम करत आहे.
+                                </p>
+                                 <div class="responsive-table-container">
+                                    <table class="data-table mt-4 text-base">
+                                        <thead>
+                                            <tr>
+                                                <th>वर्ष</th>
+                                                <th>कामाचे वर्णन</th>
+                                                <th>लक्ष्य</th>
+                                                <th>प्राप्ती</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td>२०२२-२३</td><td>सांडपाणी आणि घनकचरा व्यवस्थापन</td><td>२७३५</td><td>२४९३</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <p class="mt-4 text-base text-gray-600">
+                                    प्लॅस्टिकमुक्त गावे, कचऱ्यापासून खत निर्मिती आणि परसबागेसाठी दूषित पाण्याचा पुनर्वापर याबद्दल जागरूकता निर्माण करणे हे मुख्य उपक्रम आहेत.
+                                </p>
+                             </div>
+                             <div class="md:col-span-1 order-1 md:order-2">
+                                <div class="relative group mb-6 md:mb-0">
+                                    <img src="22.jpg" 
+                                         onerror="this.onerror=null; this.src='https://placehold.co/400x300/e2e8f0/1e293b?text=Swachh+Bharat+Gondia';" 
+                                         alt="स्वच्छ भारत गोंदिया" 
+                                         class="programme-img">
+                                    <button onclick="openImageModal(this.previousElementSibling.src, this.previousElementSibling.alt)" 
+                                            class="absolute bottom-4 right-4 bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-transform transform hover:scale-110 focus:outline-none" 
+                                            title="पूर्ण प्रतिमा पहा">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </div>
+    <!-- End Hidden container for Marathi content -->
+
+    <!-- Image Modal Structure -->
+    <div id="image-modal" class="fixed inset-0 z-[60] hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <!-- Background overlay -->
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" onclick="closeImageModal()"></div>
+
+            <!-- This element is to trick the browser into centering the modal contents. -->
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
+                    <button type="button" class="absolute top-2 right-2 text-gray-400 hover:text-gray-500 text-3xl font-bold focus:outline-none" onclick="closeImageModal()">
+                        &times;
+                    </button>
+                    <div class="mt-3 text-center sm:mt-0 sm:text-left">
+                        <img id="modal-image" src="" alt="Full View" class="w-full h-auto rounded-md object-contain max-h-[80vh]">
+                        <p id="modal-caption" class="mt-2 text-sm text-gray-500 text-center font-medium"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <!-- NGO Info -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-primary">Maharashtra Gram Darpan</h3>
+                    <p class="text-sm text-gray-400">Committed to creating a strong and independent society without inequalities and discrimination.</p>
+                </div>
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white transition duration-150">Home</a></li>
+                        <li><a href="about-us.html" class="text-gray-400 hover:text-white transition duration-150">About Us</a></li>
+                        <li><a href="our-work.html" class="text-gray-400 hover:text-white transition duration-150">Our Work</a></li>
+                        <li><a href="programmes.html" class="text-gray-400 hover:text-white transition duration-150">Programmes</a></li>
+                        <li><a href="trustees-board.html" class="text-gray-400 hover:text-white transition duration-150">Leadership</a></li>
+                        <li><a href="contact.html" class="text-gray-400 hover:text-white transition duration-150">Contact</a></li>
+                    </ul>
+                </div>
+                <!-- Contact -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Contact</h3>
+                    <p class="text-sm text-gray-400">Amravati-444601, MH</p>
+                    <p class="text-sm text-gray-400">Mob: 9373471897</p>
+                    <!-- UPDATED: Added whitespace-nowrap to keep email in one line -->
+                    <p class="text-sm text-gray-400 whitespace-nowrap">Email: maharashtragramdarpan@gmail.com</p>
+                </div>
+                <!-- Social & Legal -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Legal</h3>
+                    <p class="text-sm text-gray-400">FCRA No: 083740062</p>
+                    <p class="text-sm text-gray-400">80G Certified</p>
+                    <p class="text-sm text-gray-400">ISO 9000:2015</p>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-8 border-t border-gray-700 text-center">
+                <p class="text-sm text-gray-400">&copy; 2025 Maharashtra Gram Darpan. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- IMAGE MODAL LOGIC ---
+        function openImageModal(src, alt) {
+            const modal = document.getElementById('image-modal');
+            const modalImg = document.getElementById('modal-image');
+            const modalCaption = document.getElementById('modal-caption');
+
+            modalImg.src = src;
+            modalCaption.textContent = alt || 'Programme Image';
+            
+            modal.classList.remove('hidden');
+            // Disable body scroll when modal is open
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeImageModal() {
+            const modal = document.getElementById('image-modal');
+            modal.classList.add('hidden');
+            // Re-enable body scroll
+            document.body.style.overflow = 'auto';
+        }
+        
+        // --- LANGUAGE TRANSLATION LOGIC (Simplified to toggle embedded content) ---
+        const MAIN_CONTENT_ID = 'main-content-area';
+        const MARATHI_CONTENT_ID = 'marathi-content-area';
+        const LANG_TOGGLE_KEY = 'mgd_current_lang';
+
+        let currentLanguage = localStorage.getItem(LANG_TOGGLE_KEY) || 'EN';
+        let mainContentArea = document.getElementById(MAIN_CONTENT_ID);
+        let marathiContentArea = document.getElementById(MARATHI_CONTENT_ID);
+        let buttonTextElement = document.getElementById('lang-toggle-button');
+        let mobileButtonTextElement = document.getElementById('mobile-lang-text');
+
+        /**
+         * Toggles the website language between English (EN) and Marathi (MR).
+         */
+        function toggleLanguage() {
+            if (!mainContentArea || !marathiContentArea) return;
+            
+            if (currentLanguage === 'EN') {
+                // Switch to Marathi
+                mainContentArea.style.display = 'none';
+                marathiContentArea.style.display = 'block';
+                currentLanguage = 'MR';
+            } else {
+                // Switch to English
+                mainContentArea.style.display = 'block';
+                marathiContentArea.style.display = 'none';
+                currentLanguage = 'EN';
+            }
+
+            // Update UI elements
+            if (currentLanguage === 'MR') {
+                if(buttonTextElement) buttonTextElement.textContent = 'English (EN)';
+                if(mobileButtonTextElement) mobileButtonTextElement.textContent = 'English (EN)';
+            } else {
+                if(buttonTextElement) buttonTextElement.textContent = 'मराठी (MR)';
+                if(mobileButtonTextElement) mobileButtonTextElement.textContent = 'मराठी (MR)';
+            }
+
+            localStorage.setItem(LANG_TOGGLE_KEY, currentLanguage);
+        }
+
+        /**
+         * Initializes translation state on load.
+         */
+        function initializeTranslationState() {
+            if (!mainContentArea || !marathiContentArea) return;
+
+            // Apply stored language state
+            if (currentLanguage === 'MR') {
+                mainContentArea.style.display = 'none';
+                marathiContentArea.style.display = 'block';
+                if(buttonTextElement) buttonTextElement.textContent = 'English (EN)';
+                if(mobileButtonTextElement) mobileButtonTextElement.textContent = 'English (EN)';
+            } else {
+                mainContentArea.style.display = 'block';
+                marathiContentArea.style.display = 'none';
+                if(buttonTextElement) buttonTextElement.textContent = 'मराठी (MR)';
+                if(mobileButtonTextElement) mobileButtonTextElement.textContent = 'मराठी (MR)';
+            }
+        }
+
+        window.onload = initializeTranslationState;
+
+        // JavaScript for mobile menu toggle (kept original functionality)
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>

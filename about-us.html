@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Maharashtra Gram Darpan</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles based on the logo (Slightly Lighter Dark Green and Red theme) */
+        :root {
+            --color-primary: #065F46; /* Lighter Forest Green */
+            --color-secondary: #B91C1C; /* Brick Red */
+            --color-background: #F4F8F5; 
+            --color-text: #1F2937; /* Dark Gray */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-background); 
+            color: var(--color-text);
+        }
+        header { background-color: white; }
+        .text-primary { color: var(--color-primary); }
+        .bg-primary { background-color: var(--color-primary); }
+
+        /* Custom shadow for cards */
+        .card-shadow {
+            box-shadow: 0 10px 15px -3px rgba(6, 95, 70, 0.1), 0 4px 6px -2px rgba(6, 95, 70, 0.05);
+            transition: transform 0.3s ease;
+        }
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: white;
+            padding: 0.5rem 1rem; 
+            border-radius: 9999px; /* Rounded shape */
+            font-weight: 600;
+            transition: background-color 0.3s;
+            font-size: 1rem; 
+            line-height: 1.5; 
+            display: inline-flex; 
+            align-items: center; 
+        }
+        .btn-primary:hover {
+            background-color: #044F36;
+        }
+        
+        /* New styling for the embedded image */
+        .story-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Gallery Image Styling */
+        .gallery-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 0.75rem;
+            transition: transform 0.3s ease;
+        }
+        .gallery-img:hover {
+            transform: scale(1.02);
+        }
+
+        /* Loading spinner CSS (Matching index.html) */
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid white;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Navigation -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20 gap-4">
+                <!-- Logo/Site Name - Aligned and Responsive -->
+                <div class="flex-shrink-0 flex items-center"> 
+                    <a href="index.html" class="flex items-center space-x-3">
+                        <!-- Updated Logo Shape: matched to index.html (rounded-md and object-cover) -->
+                        <img src="IMG-20251214-WA0002.jpg" 
+                             onerror="this.onerror=null; this.src='https://placehold.co/64x64/9CA3AF/ffffff?text=LOGO';" 
+                             alt="Maharashtra Gram Darpan Logo" 
+                             class="w-12 h-12 lg:w-16 lg:h-16 rounded-md flex items-center justify-center font-bold text-xl object-cover">
+                        <span class="text-xl lg:text-xl xl:text-2xl font-extrabold text-primary leading-tight">Maharashtra Gram Darpan</span>
+                    </a>
+                </div>
+
+                <!-- Navigation Menu (Desktop) - Hidden on mobile/tablet (lg), Flex on lg+ -->
+                <nav class="hidden lg:flex space-x-6 xl:space-x-12 items-center"> 
+                    <a href="index.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Home</a>
+                    <a href="about-us.html" class="text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">About Us</a>
+                    <a href="our-work.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Our Work</a>
+                    <a href="programmes.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Programmes</a>
+                    <a href="trustees-board.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Trustees/Board</a>
+                    <a href="contact.html" class="text-gray-700 hover:text-primary font-medium transition duration-150 ease-in-out text-base xl:text-lg">Contact</a>
+                    <!-- Translation Button -->
+                    <button id="lang-toggle-button" class="btn-primary flex items-center justify-center text-sm xl:text-base px-4 py-2" onclick="toggleLanguage()">
+                        <span id="lang-text">मराठी (MR)</span>
+                        <div id="lang-spinner" class="spinner hidden ml-2"></div>
+                    </button>
+                </nav>
+
+                <!-- Mobile Menu Button - Visible on mobile/tablet, Hidden on lg+ -->
+                <button id="mobile-menu-button" class="lg:hidden p-2 rounded-md text-gray-700 hover:text-primary focus:outline-none transition duration-150 ease-in-out">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu (Hidden by default) -->
+        <div id="mobile-menu" class="hidden lg:hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 shadow-inner bg-gray-50">
+                <a href="index.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Home</a>
+                <a href="about-us.html" class="block px-3 py-2 rounded-md text-base font-medium text-primary bg-gray-50 hover:bg-gray-100">About Us</a>
+                <a href="our-work.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Our Work</a>
+                <a href="programmes.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Programmes</a>
+                <a href="trustees-board.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Trustees/Board</a>
+                <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Contact</a>
+                <button class="block px-3 py-2 rounded-md text-base font-medium text-white bg-primary text-center w-full mt-2" onclick="toggleLanguage()">
+                    <span id="mobile-lang-text">मराठी (MR)</span>
+                    <div id="mobile-lang-spinner" class="spinner hidden ml-2"></div>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content AREA (English Default) -->
+    <main id="main-content-area">
+        <div class="py-16 md:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-2">Our Story, Commitment, and Philosophy</h2>
+                    <p class="text-xl text-primary font-semibold">Creating Strong, Independent Societies for Sustainable Rural Development</p>
+                </div>
+
+                <!-- Two-Column Layout (Story and VMG) -->
+                <div class="grid lg:grid-cols-3 gap-12 mb-20">
+
+                    <!-- Column 1: Expanded About/Story -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <h3 class="text-3xl font-extrabold mb-4 text-gray-900 border-b border-primary/50 pb-2">About Maharashtra Gram Darpan</h3>
+                        
+                        <img src="group2.jpg" 
+                            alt="Image representing rural community development" 
+                            class="story-image">
+                        
+                        <p class="text-gray-700 text-lg leading-relaxed">
+                            Maharashtra Gram Darpan (MGD) stands as a leading institute dedicated to holistic rural development, encompassing crucial sectors such as Medical, Educational, Agriculture, Technical, Animal Management, and Cultural programs. Established with a profound vision, MGD has continuously worked towards empowering underprivileged communities across India.
+                        </p>
+
+                        <p class="text-gray-700 text-lg leading-relaxed">
+                            We are actively involved in promoting public health through essential services like water supply and sanitation, including the establishment of sustainable economic latrine systems. Our commitment extends to social welfare through various programs focused on women and child development. MGD successfully established production centers for economic latrines at Amravati and Tiwsa, contributing to public sanitation infrastructure.
+                        </p>
+
+                        <p class="text-gray-700 text-lg leading-relaxed">
+                            In collaboration with local stakeholders and government bodies, we strive to bridge the gap between policy and implementation. Our teams, comprising experts in construction, technicians, and retired government officers, work tirelessly to ensure that development reaches the last mile.
+                        </p>
+                    </div>
+
+                    <!-- Column 2: VMG (Vision, Mission, Goal) - Stacked Cards -->
+                    <div class="lg:col-span-1 space-y-8">
+                        
+                        <h3 class="text-3xl font-extrabold mb-4 text-gray-900 border-b border-primary/50 pb-2">Our Guiding Principles</h3>
+
+                        <!-- Vision -->
+                        <div class="p-6 bg-white rounded-xl shadow-lg border-l-4 border-primary hover:shadow-xl transition-shadow duration-300">
+                            <h4 class="text-2xl font-bold text-gray-800 mb-2">Vision: Strong & Independent Society</h4>
+                            <p class="text-gray-600 text-base">We are committed to creating a strong and independent society free from inequalities and discrimination, where every individual enjoys equal opportunities for growth and prosperity.</p>
+                        </div>
+                        <!-- Mission -->
+                        <div class="p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300" style="border-left: 4px solid var(--color-secondary);">
+                            <h4 class="text-2xl font-bold text-gray-800 mb-2">Mission: Equitable Living Environment</h4>
+                            <p class="text-gray-600 text-base">To foster a democratic and equitable living environment where all vulnerable people, especially underprivileged women and children, have access to Education, Health, Sustainable Livelihood opportunities, and essential infrastructure services, irrespective of their economic and social status.</p>
+                        </div>
+                        <!-- Goal -->
+                        <div class="p-6 bg-white rounded-lg shadow-lg border-l-4 border-primary hover:shadow-xl transition-shadow duration-300">
+                            <h4 class="text-2xl font-bold text-gray-800 mb-2">Goal: Financial Strengthening & Awareness</h4>
+                            <p class="text-gray-600 text-base">Overall socio-economic development of underprivileged people, especially women and children, through prophetic training and increased awareness. Our aim is to better the life of villages by facilitating their financial strengthening and self-sufficiency.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ADDED: Our Team Gallery Section -->
+                <div class="mb-20">
+                    <div class="text-center mb-12">
+                        <h3 class="text-3xl font-extrabold text-gray-900">Meet Our Team</h3>
+                        <p class="text-lg text-gray-600 max-w-3xl mx-auto mt-2">The dedicated individuals working behind the scenes to make our vision a reality.</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Group Image 1 -->
+                        <div class="bg-white p-4 rounded-xl card-shadow">
+                            <img src="group1.jpg" onerror="this.onerror=null; this.src='https://placehold.co/600x400/e2e8f0/1e293b?text=Team+Photo+1';" alt="Team Group Photo 1" class="gallery-img">
+                            <p class="text-center mt-3 font-semibold text-gray-700">Core Committee Members</p>
+                        </div>
+                        <!-- Group Image 2 -->
+                        <div class="bg-white p-4 rounded-xl card-shadow">
+                            <img src="group3.jpg" onerror="this.onerror=null; this.src='https://placehold.co/600x400/e2e8f0/1e293b?text=Team+Photo+2';" alt="Team Group Photo 2" class="gallery-img">
+                            <p class="text-center mt-3 font-semibold text-gray-700">Field Volunteers & Staff</p>
+                        </div>
+                        <!-- Group Image 3 -->
+                        <div class="bg-white p-4 rounded-xl card-shadow">
+                            <img src="group4.jpg" onerror="this.onerror=null; this.src='https://placehold.co/600x400/e2e8f0/1e293b?text=Team+Photo+3';" alt="Team Group Photo 3" class="gallery-img">
+                            <p class="text-center mt-3 font-semibold text-gray-700">Women SHG Leaders</p>
+                        </div>
+                        <!-- Group Image 4 -->
+                        <div class="bg-white p-4 rounded-xl card-shadow">
+                            <img src="group5.jpg" onerror="this.onerror=null; this.src='https://placehold.co/600x400/e2e8f0/1e293b?text=Team+Photo+4';" alt="Team Group Photo 4" class="gallery-img">
+                            <p class="text-center mt-3 font-semibold text-gray-700">Community Outreach Team</p>
+                        </div>
+                        <!-- Group Image 5 -->
+                        <div class="bg-white p-4 rounded-xl card-shadow">
+                            <img src="group6.jpg" onerror="this.onerror=null; this.src='https://placehold.co/600x400/e2e8f0/1e293b?text=Team+Photo+5';" alt="Team Group Photo 5" class="gallery-img">
+                            <p class="text-center mt-3 font-semibold text-gray-700">Medical Camp Volunteers</p>
+                        </div>
+                        <!-- Group Image 6 -->
+                        <div class="bg-white p-4 rounded-xl card-shadow">
+                            <img src="group7.jpg" onerror="this.onerror=null; this.src='https://placehold.co/600x400/e2e8f0/1e293b?text=Team+Photo+6';" alt="Team Group Photo 6" class="gallery-img">
+                            <p class="text-center mt-3 font-semibold text-gray-700">Technical Support Staff</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EXPANDED CONTENT: Core Focus Areas -->
+                <div class="mb-20">
+                    <div class="text-center mb-12">
+                        <h3 class="text-3xl font-extrabold text-gray-900">Our Core Focus Areas</h3>
+                        <p class="text-lg text-gray-600 max-w-3xl mx-auto mt-2">We adopt a multi-faceted approach to development, targeting key sectors that drive sustainable growth in rural India.</p>
+                    </div>
+                    <div class="grid md:grid-cols-3 gap-8">
+                        <div class="bg-white p-6 rounded-xl card-shadow border-t-4 border-primary">
+                            <div class="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                                <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                            </div>
+                            <h4 class="text-xl font-bold text-gray-900 mb-2">Agriculture & Environment</h4>
+                            <p class="text-gray-600">Implementing sustainable farming techniques, watershed management, and soil conservation projects like "Silt-free dam, silt-filled Shivar" to boost agricultural productivity.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl card-shadow border-t-4 border-secondary">
+                            <div class="h-12 w-12 bg-red-100 rounded-full flex items-center justify-center mb-4">
+                                <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                            </div>
+                            <h4 class="text-xl font-bold text-gray-900 mb-2">Health & Sanitation</h4>
+                            <p class="text-gray-600">Organizing Mega Health Camps (Maha Arogya Shibir) for critical surgeries and promoting hygiene through low-cost economic latrines and waste management systems.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl card-shadow border-t-4 border-primary">
+                            <div class="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                                <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                            </div>
+                            <h4 class="text-xl font-bold text-gray-900 mb-2">Education & Empowerment</h4>
+                            <p class="text-gray-600">Vocational training for women in tailoring and beauty, forming Self Help Groups (SHGs) for financial independence, and conducting educational awareness programs.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EXPANDED CONTENT: Awards & Recognition -->
+                <div class="bg-white rounded-2xl p-8 md:p-12 card-shadow">
+                    <div class="grid md:grid-cols-2 gap-8 items-center">
+                        <div>
+                            <h3 class="text-3xl font-extrabold text-gray-900 mb-4">Awards & Recognition</h3>
+                            <div class="w-20 h-1 bg-secondary mb-6"></div>
+                            <p class="text-gray-700 text-lg mb-6">
+                                Our unwavering commitment to rural development has been recognized by state authorities and the community alike. These accolades serve as a testament to the impact we create on the ground.
+                            </p>
+                            <ul class="space-y-4">
+                                <li class="flex items-start">
+                                    <svg class="h-6 w-6 text-yellow-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                    <span class="text-gray-700 font-medium">Govt. of Maharashtra Award: Conferred upon our 'Yuva' Co-operative Institute for excellence in rural cooperative movements.</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="h-6 w-6 text-yellow-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                    <span class="text-gray-700 font-medium">Ministerial Appreciation: Hon’ble Shree Anna Saheb Dange, Minister for Rural Development, has formally appreciated our initiatives.</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="h-6 w-6 text-yellow-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                    <span class="text-gray-700 font-medium">Policy Influence: Several of our suggestions regarding rural development strategies were accepted and implemented by the State Government.</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="relative h-64 md:h-full min-h-[300px] bg-gray-100 rounded-xl overflow-hidden flex items-center justify-center">
+                            <!-- Placeholder for Award Image -->
+                            <div class="text-center p-6">
+                                <svg class="w-24 h-24 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                                <p class="text-gray-500 font-semibold">Award Ceremony / Recognition Image</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+    
+    <!-- Hidden container for Marathi content -->
+    <div id="marathi-content-area" style="display: none;">
+        <div class="py-16 md:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-2">आमची कथा, बांधिलकी आणि तत्त्वज्ञान</h2>
+                    <p class="text-xl text-primary font-semibold">शाश्वत ग्रामीण विकासासाठी मजबूत, स्वतंत्र समाज निर्माण करणे</p>
+                </div>
+
+                <!-- Two-Column Layout (Story and VMG) - Marathi -->
+                <div class="grid lg:grid-cols-3 gap-12 mb-20">
+
+                    <div class="lg:col-span-2 space-y-6">
+                        <h3 class="text-3xl font-extrabold mb-4 text-gray-900 border-b border-primary/50 pb-2">महाराष्ट्र ग्राम दर्पण बद्दल</h3>
+                        
+                        <img src="group2.jpg" 
+                            alt="ग्रामीण विकास समुदायाचे प्रतिनिधित्व करणारी प्रतिमा" 
+                            class="story-image">
+                        
+                        <p class="text-gray-700 text-lg leading-relaxed">
+                            महाराष्ट्र ग्राम दर्पण (MGD) ही वैद्यकीय, शैक्षणिक, कृषी, तांत्रिक, पशु व्यवस्थापन आणि सांस्कृतिक कार्यक्रमांसारख्या महत्त्वपूर्ण क्षेत्रांचा समावेश असलेल्या समग्र ग्रामीण विकासासाठी समर्पित अग्रगण्य संस्था आहे. एका सखोल दृष्टिकोनातून स्थापित, MGD ने संपूर्ण भारतातील वंचित समुदायांना सशक्त करण्यासाठी सतत कार्य केले आहे.
+                        </p>
+
+                        <p class="text-gray-700 text-lg leading-relaxed">
+                            आम्ही पाणीपुरवठा आणि स्वच्छता यांसारख्या आवश्यक सेवांद्वारे सार्वजनिक आरोग्य वाढविण्यात सक्रियपणे गुंतलो आहोत, ज्यामध्ये टिकाऊ आर्थिक शौचालय प्रणालीची स्थापना समाविष्ट आहे. आमची बांधिलकी महिला आणि बाल विकासावर केंद्रित विविध सामाजिक कल्याणकारी कार्यक्रमांपर्यंत विस्तारलेली आहे. MGD ने अमरावती आणि तिवासा येथे आर्थिक शौचालयांसाठी उत्पादन केंद्रे यशस्वीरित्या स्थापित केली, ज्यामुळे सार्वजनिक स्वच्छता पायाभूत सुविधांना हातभार लागला.
+                        </p>
+
+                        <p class="text-gray-700 text-lg leading-relaxed">
+                            स्थानिक भागधारक आणि सरकारी संस्थांच्या सहकार्याने, आम्ही धोरण आणि अंमलबजावणीमधील अंतर कमी करण्याचा प्रयत्न करतो. आमची टीम, ज्यात बांधकाम तज्ज्ञ, तंत्रज्ञ आणि सेवानिवृत्त सरकारी अधिकारी यांचा समावेश आहे, विकासाचा लाभ तळागाळापर्यंत पोहोचवण्यासाठी अथक परिश्रम घेते.
+                        </p>
+                    </div>
+
+                    <div class="lg:col-span-1 space-y-8">
+                        
+                        <h3 class="text-3xl font-extrabold mb-4 text-gray-900 border-b border-primary/50 pb-2">आमची मार्गदर्शक तत्त्वे</h3>
+
+                        <!-- Vision -->
+                        <div class="p-6 bg-white rounded-xl shadow-lg border-l-4 border-primary hover:shadow-xl transition-shadow duration-300">
+                            <h4 class="text-2xl font-bold text-gray-800 mb-2">दृष्टी: मजबूत आणि स्वतंत्र समाज</h4>
+                            <p class="text-gray-600 text-base">असमानता आणि भेदभावांशिवाय मजबूत आणि स्वतंत्र समाज निर्माण करण्यासाठी आम्ही वचनबद्ध आहोत, जिथे प्रत्येक व्यक्तीला वाढ आणि समृद्धीसाठी समान संधी मिळतील.</p>
+                        </div>
+                        <!-- Mission -->
+                        <div class="p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300" style="border-left: 4px solid var(--color-secondary);">
+                            <h4 class="text-2xl font-bold text-gray-800 mb-2">ध्येय: न्याय्य जीवन वातावरण</h4>
+                            <p class="text-gray-600 text-base">लोकशाही आणि न्याय्य जीवन वातावरण वाढवणे, जिथे सर्व असुरक्षित लोकांना, विशेषतः वंचित महिला आणि मुलांना, त्यांच्या आर्थिक आणि सामाजिक स्थितीची पर्वा न करता शिक्षण, आरोग्य, शाश्वत उपजीविकेची संधी आणि आवश्यक पायाभूत सुविधा सेवा मिळतील.</p>
+                        </div>
+                        <!-- Goal -->
+                        <div class="p-6 bg-white rounded-lg shadow-lg border-l-4 border-primary hover:shadow-xl transition-shadow duration-300">
+                            <h4 class="text-2xl font-bold text-gray-800 mb-2">उद्देश: आर्थिक बळकटीकरण आणि जागरूकता</h4>
+                            <p class="text-gray-600 text-base">भविष्यवेधी प्रशिक्षण आणि जागरूकता वाढवून वंचित लोकांचा, विशेषतः महिला आणि मुलांचा, सर्वांगीण सामाजिक/आर्थिक विकास करणे. गावकऱ्यांचे आर्थिक बळकटीकरण करून त्यांचे जीवनमान सुधारणे हे आमचे उद्दिष्ट आहे.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ADDED: Our Team Gallery Section (Marathi) -->
+                <div class="mb-20">
+                    <div class="text-center mb-12">
+                        <h3 class="text-3xl font-extrabold text-gray-900">आमची टीम</h3>
+                        <p class="text-lg text-gray-600 max-w-3xl mx-auto mt-2">आमचे स्वप्न सत्यात उतरवण्यासाठी पडद्यामागे काम करणारे समर्पित लोक.</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Group Image 1 -->
+                        <div class="bg-white p-4 rounded-xl card-shadow">
+                            <img src="group1.jpg" onerror="this.onerror=null; this.src='https://placehold.co/600x400/e2e8f0/1e293b?text=Team+Photo+1';" alt="Team Group Photo 1" class="gallery-img">
+                            <p class="text-center mt-3 font-semibold text-gray-700">कोर कमिटी सदस्य</p>
+                        </div>
+                        <!-- Group Image 2 -->
+                        <div class="bg-white p-4 rounded-xl card-shadow">
+                            <img src="group3.jpg" onerror="this.onerror=null; this.src='https://placehold.co/600x400/e2e8f0/1e293b?text=Team+Photo+2';" alt="Team Group Photo 2" class="gallery-img">
+                            <p class="text-center mt-3 font-semibold text-gray-700">फील्ड स्वयंसेवक आणि कर्मचारी</p>
+                        </div>
+                        <!-- Group Image 3 -->
+                        <div class="bg-white p-4 rounded-xl card-shadow">
+                            <img src="group4.jpg" onerror="this.onerror=null; this.src='https://placehold.co/600x400/e2e8f0/1e293b?text=Team+Photo+3';" alt="Team Group Photo 3" class="gallery-img">
+                            <p class="text-center mt-3 font-semibold text-gray-700">महिला बचत गट प्रमुख</p>
+                        </div>
+                        <!-- Group Image 4 -->
+                        <div class="bg-white p-4 rounded-xl card-shadow">
+                            <img src="group5.jpg" onerror="this.onerror=null; this.src='https://placehold.co/600x400/e2e8f0/1e293b?text=Team+Photo+4';" alt="Team Group Photo 4" class="gallery-img">
+                            <p class="text-center mt-3 font-semibold text-gray-700">समुदाय पोहोच टीम</p>
+                        </div>
+                        <!-- Group Image 5 -->
+                        <div class="bg-white p-4 rounded-xl card-shadow">
+                            <img src="group6.jpg" onerror="this.onerror=null; this.src='https://placehold.co/600x400/e2e8f0/1e293b?text=Team+Photo+5';" alt="Team Group Photo 5" class="gallery-img">
+                            <p class="text-center mt-3 font-semibold text-gray-700">वैद्यकीय शिबिर स्वयंसेवक</p>
+                        </div>
+                        <!-- Group Image 6 -->
+                        <div class="bg-white p-4 rounded-xl card-shadow">
+                            <img src="group7.jpg" onerror="this.onerror=null; this.src='https://placehold.co/600x400/e2e8f0/1e293b?text=Team+Photo+6';" alt="Team Group Photo 6" class="gallery-img">
+                            <p class="text-center mt-3 font-semibold text-gray-700">तांत्रिक सहाय्य कर्मचारी</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EXPANDED CONTENT: Core Focus Areas (Marathi) -->
+                <div class="mb-20">
+                    <div class="text-center mb-12">
+                        <h3 class="text-3xl font-extrabold text-gray-900">आमचे मुख्य कार्यक्षेत्र</h3>
+                        <p class="text-lg text-gray-600 max-w-3xl mx-auto mt-2">आम्ही विकासासाठी बहुआयामी दृष्टीकोन स्वीकारतो, जो ग्रामीण भारताच्या शाश्वत वाढीसाठी महत्त्वाच्या क्षेत्रांवर लक्ष केंद्रित करतो.</p>
+                    </div>
+                    <div class="grid md:grid-cols-3 gap-8">
+                        <div class="bg-white p-6 rounded-xl card-shadow border-t-4 border-primary">
+                            <div class="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                                <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                            </div>
+                            <h4 class="text-xl font-bold text-gray-900 mb-2">कृषी आणि पर्यावरण</h4>
+                            <p class="text-gray-600">शेतीची उत्पादकता वाढविण्यासाठी शाश्वत शेती तंत्र, पाणलोट व्यवस्थापन आणि 'गाळमुक्त धरण, गाळयुक्त शिवार' यांसारखे मृदा संधारण प्रकल्प राबवणे.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl card-shadow border-t-4 border-secondary">
+                            <div class="h-12 w-12 bg-red-100 rounded-full flex items-center justify-center mb-4">
+                                <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                            </div>
+                            <h4 class="text-xl font-bold text-gray-900 mb-2">आरोग्य आणि स्वच्छता</h4>
+                            <p class="text-gray-600">गंभीर शस्त्रक्रियांसाठी 'महा आरोग्य शिबिरांचे' आयोजन करणे आणि कमी खर्चाची आर्थिक शौचालये व कचरा व्यवस्थापन प्रणालीद्वारे स्वच्छतेला प्रोत्साहन देणे.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl card-shadow border-t-4 border-primary">
+                            <div class="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                                <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                            </div>
+                            <h4 class="text-xl font-bold text-gray-900 mb-2">शिक्षण आणि सक्षमीकरण</h4>
+                            <p class="text-gray-600">महिलांना शिवणकाम आणि ब्युटी पार्लरमध्ये व्यावसायिक प्रशिक्षण देणे, आर्थिक स्वातंत्र्यासाठी बचत गट (SHGs) तयार करणे आणि शैक्षणिक जनजागृती कार्यक्रम राबवणे.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EXPANDED CONTENT: Awards & Recognition (Marathi) -->
+                <div class="bg-white rounded-2xl p-8 md:p-12 card-shadow">
+                    <div class="grid md:grid-cols-2 gap-8 items-center">
+                        <div>
+                            <h3 class="text-3xl font-extrabold text-gray-900 mb-4">पुरस्कार आणि सन्मान</h3>
+                            <div class="w-20 h-1 bg-secondary mb-6"></div>
+                            <p class="text-gray-700 text-lg mb-6">
+                                ग्रामीण विकासासाठी आमच्या अतूट बांधिलकीची दखल राज्य अधिकारी आणि समाजाने घेतली आहे. हे पुरस्कार आम्ही तळागाळापर्यंत पोहोचवलेल्या बदलाचा पुरावा आहेत.
+                            </p>
+                            <ul class="space-y-4">
+                                <li class="flex items-start">
+                                    <svg class="h-6 w-6 text-yellow-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                    <span class="text-gray-700 font-medium">महाराष्ट्र शासन पुरस्कार: ग्रामीण सहकारी चळवळीतील उत्कृष्टतेसाठी आमच्या 'युवा' सहकारी संस्थेला प्रदान करण्यात आला.</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="h-6 w-6 text-yellow-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                    <span class="text-gray-700 font-medium">मंत्रीस्तरीय कौतुक: माननीय श्री अण्णासाहेब डांगे, ग्रामविकास मंत्री, यांनी आमच्या उपक्रमांचे औपचारिक कौतुक केले आहे.</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <svg class="h-6 w-6 text-yellow-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                    <span class="text-gray-700 font-medium">धोरणात्मक प्रभाव: ग्रामीण विकास धोरणांबाबत आमच्या अनेक सूचना राज्य सरकारने स्वीकारल्या आणि अंमलात आणल्या.</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="relative h-64 md:h-full min-h-[300px] bg-gray-100 rounded-xl overflow-hidden flex items-center justify-center">
+                            <!-- Placeholder for Award Image -->
+                            <div class="text-center p-6">
+                                <svg class="w-24 h-24 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                                <p class="text-gray-500 font-semibold">पुरस्कार वितरण / सन्मान प्रतिमा</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- End Hidden container for Marathi content -->
+
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <!-- NGO Info -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-primary">Maharashtra Gram Darpan</h3>
+                    <p class="text-sm text-gray-400">Committed to creating a strong and independent society without inequalities and discrimination.</p>
+                </div>
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white transition duration-150">Home</a></li>
+                        <li><a href="about-us.html" class="text-gray-400 hover:text-white transition duration-150">Our Story</a></li>
+                        <li><a href="programmes.html" class="text-gray-400 hover:text-white transition duration-150">Programmes</a></li>
+                        <li><a href="trustees-board.html" class="text-gray-400 hover:text-white transition duration-150">Leadership</a></li>
+                    </ul>
+                </div>
+                <!-- Contact -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Contact</h3>
+                    <p class="text-sm text-gray-400">Amravati-444601, MH</p>
+                    <p class="text-sm text-gray-400">Mob: 9373471897</p>
+                    <p class="text-sm text-gray-400 whitespace-nowrap">Email: maharashtragramdarpan@gmail.com</p>
+                </div>
+                <!-- Legal & Social -->
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Legal</h3>
+                    <p class="text-sm text-gray-400 mb-2">FCRA No: 083740062</p>
+                    <p class="text-sm text-gray-400 mb-2">80G Certified</p>
+                    <p class="text-sm text-gray-400 mb-6">ISO 9000:2015</p>
+
+                    <h3 class="text-lg font-bold mb-4">Connect With Us</h3>
+                    <div class="flex space-x-4">
+                        <!-- Facebook -->
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-150">
+                            <span class="sr-only">Facebook</span>
+                            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                        <!-- Instagram -->
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-150">
+                            <span class="sr-only">Instagram</span>
+                            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772 4.902 4.902 0 011.772-1.153c.636-.247 1.363-.416 2.427-.465C9.673 2.013 10.03 2 12.488 2h-.173zM12.315 3.832c-2.386 0-2.68.01-3.618.053-.865.04-1.332.184-1.644.305-.413.16-.707.35-.99.633-.284.283-.475.577-.634.99-.122.312-.266.779-.306 1.644-.043.938-.053 1.232-.053 3.618v.173c0 2.386.01 2.68.053 3.618.04.865.184 1.332.305 1.644.16.413.35.707.633.99.283.284.577.475.99.634.312.122.779.266 1.644.306-.938.043 1.232.053-3.618-.053H12.315zm.173 3.333a4.835 4.835 0 110 9.67 4.835 4.835 0 010-9.67zm0 1.832a3.003 3.003 0 100 6.006 3.003 3.003 0 000-6.006zm5.337-3.875a1.22 1.22 0 110 2.44 1.22 1.22 0 010-2.44z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                        <!-- LinkedIn -->
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-150">
+                            <span class="sr-only">LinkedIn</span>
+                            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-8 border-t border-gray-700 text-center">
+                <p class="text-sm text-gray-400">&copy; 2025 Maharashtra Gram Darpan. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // --- LANGUAGE TRANSLATION LOGIC ---
+        const MAIN_CONTENT_ID = 'main-content-area';
+        const MARATHI_CONTENT_ID = 'marathi-content-area';
+        const LANG_TOGGLE_KEY = 'mgd_current_lang_about'; // Unique key for this page
+
+        let currentLanguage = localStorage.getItem(LANG_TOGGLE_KEY) || 'EN';
+        let mainContentArea = document.getElementById(MAIN_CONTENT_ID);
+        let marathiContentArea = document.getElementById(MARATHI_CONTENT_ID);
+        let buttonTextElement = document.getElementById('lang-toggle-button');
+        let mobileButtonTextElement = document.getElementById('mobile-lang-text');
+
+        /**
+         * Toggles the website language between English (EN) and Marathi (MR).
+         */
+        function toggleLanguage() {
+            if (!mainContentArea || !marathiContentArea) return;
+            
+            if (currentLanguage === 'EN') {
+                // Switch to Marathi
+                mainContentArea.style.display = 'none';
+                marathiContentArea.style.display = 'block';
+                currentLanguage = 'MR';
+            } else {
+                // Switch to English
+                mainContentArea.style.display = 'block';
+                marathiContentArea.style.display = 'none';
+                currentLanguage = 'EN';
+            }
+
+            // Update UI elements
+            if (currentLanguage === 'MR') {
+                if(buttonTextElement) buttonTextElement.textContent = 'English (EN)';
+                if(mobileButtonTextElement) mobileButtonTextElement.textContent = 'English (EN)';
+            } else {
+                if(buttonTextElement) buttonTextElement.textContent = 'मराठी (MR)';
+                if(mobileButtonTextElement) mobileButtonTextElement.textContent = 'मराठी (MR)';
+            }
+
+            localStorage.setItem(LANG_TOGGLE_KEY, currentLanguage);
+        }
+
+        /**
+         * Initializes translation state on load.
+         */
+        function initializeTranslationState() {
+            if (!mainContentArea || !marathiContentArea) return;
+
+            // Apply stored language state
+            if (currentLanguage === 'MR') {
+                mainContentArea.style.display = 'none';
+                marathiContentArea.style.display = 'block';
+                if(buttonTextElement) buttonTextElement.textContent = 'English (EN)';
+                if(mobileButtonTextElement) mobileButtonTextElement.textContent = 'English (EN)';
+            } else {
+                mainContentArea.style.display = 'block';
+                marathiContentArea.style.display = 'none';
+                if(buttonTextElement) buttonTextElement.textContent = 'मराठी (MR)';
+                if(mobileButtonTextElement) mobileButtonTextElement.textContent = 'मराठी (MR)';
+            }
+        }
+
+        window.onload = initializeTranslationState;
+
+        // JavaScript for mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>
